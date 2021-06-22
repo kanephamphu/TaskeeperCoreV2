@@ -1,4 +1,4 @@
-export interface Authentication{
+export interface Authentication {
     authenticationString: string;
     password: string;
 }
