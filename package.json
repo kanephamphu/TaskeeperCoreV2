@@ -6,17 +6,31 @@
   "author": "Kane Pham Phu <phamphutaitrainer@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/eslint": "^7.2.13",
+    "@types/lodash": "^4.14.170",
+    "@types/mongoose": "^5.11.97",
     "@types/next": "^9.0.0",
     "@types/react": "^17.0.11",
     "@zeit/next-typescript": "^1.1.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
     "next": "^11.0.0",
+    "prettier": "^2.3.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "touch": "^3.1.0"
   },
   "scripts": {
-    "dev": "next"
+    "dev": "next",
+    "lint": "eslint --fix .",
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.28.0",
+    "@typescript-eslint/parser": "^4.28.0",
+    "eslint": "^7.29.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "typescript": "^4.3.4"
   }
 }
