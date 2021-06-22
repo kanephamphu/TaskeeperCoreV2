@@ -1,4 +1,9 @@
+import { WorkingInformation } from "ViewModels/DataModels/workingInformation.model";
+import { EducationInformation } from "ViewModels/DataModels/eduationInformation.model";
+import { Permission } from "ViewModels/DataModels/permission.model";
+
 export interface User {
+    _id: string;
     authenticationInformation: {
         email: string;
         phoneNumber: string;
@@ -28,32 +33,8 @@ export interface User {
         isHidden: boolean;
     };
     phoneNumberChangeHistory: [string];
-    workingInformation: [
-        {
-            companyName: string;
-            position: string;
-            location: string;
-            description: string;
-            timePeriod: {
-                type: string;
-                fromTime: Date;
-                toTime: Date;
-            };
-        }
-    ];
-    educationInformation: [
-        {
-            trainingCompanyName: string;
-            position: string;
-            location: string;
-            description: string;
-            timePeriod: {
-                type: string;
-                fromTime: Date;
-                toTime: Date;
-            };
-        }
-    ];
+    workingInformation: [WorkingInformation];
+    educationInformation: [EducationInformation];
     votes: [
         {
             voterId: string;
@@ -117,4 +98,13 @@ export interface User {
             time: Date;
         }
     ];
+    permissions: {
+        posts: Permission;
+        users: Permission;
+        comments: Permission;
+        applyPosts: Permission;
+        approveUsers: Permission;
+    };
+    disabled: boolean;
+    role: string;
 }

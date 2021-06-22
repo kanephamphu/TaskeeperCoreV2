@@ -1,5 +1,5 @@
 import { Schema, model, connect } from "mongoose";
-import { User } from "../Users/user.model";
+import { User } from "../DataModels/user.model";
 
 const schema = new Schema<User>({
     authenticationInformation: {
@@ -243,10 +243,44 @@ const schema = new Schema<User>({
             type: {
                 type: String,
             },
-            coordinates: [Number],
+            coordinates: {
+                type: [Number],
+            },
             time: {
                 type: Date,
             },
         },
     ],
+    permissions: {
+        posts: {
+            
+        }
+        users: {
+            read: Boolean;
+            create: Boolean;
+            update: Boolean;
+            delete: Boolean;
+        };
+        comments: {
+            read: Boolean;
+            create: Boolean;
+            update: Boolean;
+            delete: Boolean;
+        };
+        applyPosts: {
+            read: Boolean;
+            create: Boolean;
+            update: Boolean;
+            delete: Boolean;
+        };
+        approveUsers: {
+            read: Boolean;
+            create: Boolean;
+            update: Boolean;
+            delete: Boolean;
+        };
+    };
+    disabled: Boolean;
+    role: string;
 });
+
