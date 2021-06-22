@@ -1,15 +1,11 @@
-export interface User{
+export interface User {
     authenticationInformation: {
         email: string;
         phoneNumber: string;
         ISDCodeId: string;
         password: string;
-        facebookLoginInformation: {
-
-        };
-        googleLoginInformation: {
-
-        };
+        facebookLoginInformation: {};
+        googleLoginInformation: {};
     };
     createdAt: Date;
     modifiedAt: Date;
@@ -22,9 +18,7 @@ export interface User{
     website: [string];
     dateOfBirth: Date;
     nationality: string;
-    emailChangeHistory: [
-        string
-    ];
+    emailChangeHistory: [string];
     displayPhoneNumber: {
         phoneNumber: string;
         isHidden: boolean;
@@ -44,7 +38,7 @@ export interface User{
                 type: string;
                 fromTime: Date;
                 toTime: Date;
-            }
+            };
         }
     ];
     educationInformation: [
@@ -57,7 +51,7 @@ export interface User{
                 type: string;
                 fromTime: Date;
                 toTime: Date;
-            }
+            };
         }
     ];
     votes: [
@@ -95,27 +89,32 @@ export interface User{
             lastTime: Date;
         }
     ];
-    postsAccessHistories: [{
-        postId: string;
-        lastTime: Date;
-    }];
-    interestedPosts: [{
-        postId: string;
-        postOwnerId: string;
-        postOwnerAvatar: string;
-        postOwnerFirstName: string;
-        postOwnerLastName: string;
-        postTitle: string;
-
-    }];
+    postsAccessHistories: [
+        {
+            postId: string;
+            lastTime: Date;
+        }
+    ];
+    interestedPosts: [
+        {
+            postId: string;
+            postOwnerId: string;
+            postOwnerAvatar: string;
+            postOwnerFirstName: string;
+            postOwnerLastName: string;
+            postTitle: string;
+        }
+    ];
     currentLocation: {
         location: string;
         coordinates: [number];
         isHidden: boolean;
     };
-    locationHistories: [{
-        type: string;
-        coordinates: [number];
-        time: Date;
-    }];
+    locationHistories: [
+        {
+            type: string;
+            coordinates: [number];
+            time: Date;
+        }
+    ];
 }
