@@ -1,11 +1,11 @@
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { Test, TestingModule } from "@nestjs/testing";
-import { UsersModule } from "src/users/users.module";
-import { AuthService } from "src/auth/auth.service";
-import { jwtConstants } from "src/auth/constants";
-import { JwtStrategy } from "src/auth/strategies/jwt.strategy";
-import { LocalStrategy } from "src/auth/strategies/local.strategy";
+import { UsersModule } from "users/users.module";
+import { AuthService } from "auth/auth.service";
+import { jwtConstants } from "auth/constants";
+import { JwtStrategy } from "auth/strategies/jwt.strategy";
+import { LocalStrategy } from "auth/strategies/local.strategy";
 
 describe("AuthService", () => {
     let service: AuthService;
