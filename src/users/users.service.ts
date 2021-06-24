@@ -1,8 +1,9 @@
 import { LoginUserDto } from "users/dto/user-login.dto";
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtPayload } from "auth/interfaces/payload.interface";
 import { UserDto } from "./dto/user.dto";
 import { toUserDto } from "shared/mapper/users/users.mapper";
+import { comparePasswords } from "shared/utils/stringHelper";
 
 export type User = any;
 //https://www.codemag.com/Article/2001081/Nest.js-Step-by-Step-Part-3-Users-and-Authentication
@@ -15,7 +16,8 @@ export class UsersService {
             {
                 userId: 1,
                 loginString: "john",
-                password: "changeme",
+                password:
+                    "$2y$12$7RZNSKm2Exu/MSaW/GrGeOBduZqgRv6eFXChdd2zHybgi8PlzpcQm",
             },
             {
                 userId: 2,
@@ -30,8 +32,27 @@ export class UsersService {
         ];
     }
 
-    findByLogin({ loginString }: LoginUserDto): Promise<User | undefined> {
-        return this.findOne(loginString);
+    async findByLogin({
+        loginString,
+        password,
+    }: LoginUserDto): Promise<UserDto> {
+        const user = await this.users.findOne({ loginString: loginString });
+
+        if (!user) {
+            throw new HttpException("User not found", HttpStatus.UNAUTHORIZED);
+        }
+
+        // compare passwords
+        const areEqual = await comparePasswords(user.password, password);
+
+        if (!areEqual) {
+            throw new HttpException(
+                "Invalid credentials",
+                HttpStatus.UNAUTHORIZED
+            );
+        }
+
+        return toUserDto(user);
     }
 
     async findOne(loginString?: string): Promise<UserDto> {
