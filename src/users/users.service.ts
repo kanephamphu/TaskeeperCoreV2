@@ -4,6 +4,7 @@ import { JwtPayload } from "auth/interfaces/payload.interface";
 import { UserDto } from "./dto/user.dto";
 import { toUserDto } from "shared/mapper/users/users.mapper";
 import { comparePasswords } from "shared/utils/stringHelper";
+import _ from "lodash";
 
 export type User = any;
 //https://www.codemag.com/Article/2001081/Nest.js-Step-by-Step-Part-3-Users-and-Authentication
@@ -36,7 +37,10 @@ export class UsersService {
         loginString,
         password,
     }: LoginUserDto): Promise<UserDto> {
-        const user = await this.users.findOne({ loginString: loginString });
+        const user = _.chain(this.users)
+            .filter({ loginString: loginString })
+            .head()
+            .value();
 
         if (!user) {
             throw new HttpException("User not found", HttpStatus.UNAUTHORIZED);
@@ -56,7 +60,10 @@ export class UsersService {
     }
 
     async findOne(loginString?: string): Promise<UserDto> {
-        const user = await this.users.findOne({ loginString: loginString });
+        const user = _.chain(this.users)
+            .filter({ loginString: loginString })
+            .head()
+            .value();
 
         return toUserDto(user);
     }
