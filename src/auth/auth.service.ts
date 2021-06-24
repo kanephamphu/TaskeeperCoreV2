@@ -1,6 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { LoginUserDto } from "users/dto/user-login.dto";
+import { UserDto } from "users/dto/user.dto";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UsersService } from "users/users.service";
 import { JwtService } from "@nestjs/jwt";
+import { JwtPayload } from "./interfaces/payload.interface";
+import { LoginStatus } from "auth/interfaces/login-status.interface";
 
 @Injectable()
 export class AuthService {
@@ -9,19 +13,37 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async validateUser(username: string, pass: string): Promise<any> {
-        const user = await this.usersService.findOne(username);
-        if (user && user.password === pass) {
-            const { password, ...result } = user;
-            return result;
-        }
-        return null;
+    async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
+        // find user in db
+        const user = await this.usersService.findByLogin(loginUserDto);
+
+        // generate and sign token
+        const token = this._createToken(user);
+
+        return {
+            loginString: user.loginString,
+            ...token,
+        };
     }
 
-    async login(user: any) {
-        const payload = { username: user.username, sub: user.userId };
+    async validateUser(payload: JwtPayload): Promise<UserDto> {
+        const user = await this.usersService.findByPayload(payload);
+        if (!user) {
+            throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
+
+        return user;
+    }
+
+    private _createToken({ loginString }: UserDto): any {
+        const expiresIn = process.env.EXPIRESIN;
+
+        const user: JwtPayload = { loginString };
+        const accessToken = this.jwtService.sign(user);
+
         return {
-            access_token: this.jwtService.sign(payload),
+            expiresIn,
+            accessToken,
         };
     }
 }
