@@ -32,6 +32,7 @@
         "class-validator": "^0.13.1",
         "csurf": "^1.11.0",
         "helmet": "^4.6.0",
+        "mongoose": "^5.12.14",
         "passport": "^0.4.1",
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",
