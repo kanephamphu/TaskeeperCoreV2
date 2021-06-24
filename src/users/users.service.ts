@@ -63,15 +63,21 @@ export class UsersService {
     }
 
     async findOne(loginString?: string): Promise<UserDto> {
-        const user = _.chain(this.users)
-            .filter({ loginString: loginString })
-            .head()
-            .value();
+        const user = {
+            userId: 1,
+            loginString: "john",
+            password:
+                "$2b$12$7.CyhOsaVN8uQgKIUWIuO.Zr1dwd42U1W0npXjgjS6cDk2RxO2/fC",
+        };
 
         return toUserDto(user);
     }
 
     async findByPayload({ loginString }: JwtPayload): Promise<UserDto> {
         return await this.findOne(loginString);
+    }
+
+    async findAll() {
+        return this.users;
     }
 }
