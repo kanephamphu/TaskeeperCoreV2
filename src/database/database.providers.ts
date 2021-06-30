@@ -6,7 +6,7 @@ export const databaseProviders = [
         provide: "DATABASE_CONNECTION",
         useFactory: (): Promise<typeof mongoose> =>
             mongoose.connect(
-                "mongodb+srv://taskeeper_admin:ranDomPassword1608@cluster0.bctkf.mongodb.net/Taskeeper?retryWrites=true&w=majority"
+                "mongodb+srv://taskeeper_admin:ranDomPassword1608@cluster0.bctkf.mongodb.net/TaskeeperDev?retryWrites=true&w=majority"
             ),
     },
 ];
