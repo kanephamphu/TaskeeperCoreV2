@@ -2,6 +2,7 @@ import {
     Ability,
     AbilityBuilder,
     AbilityClass,
+    ExtractSubjectType,
     InferSubjects,
 } from "@casl/ability";
 import { Action } from "enums/auth/auth.enum";
@@ -14,7 +15,7 @@ class User {
 class Article {
     id: number;
     isPublished: boolean;
-    authorId: string;
+    authorId: number;
 }
 
 type Subjects = InferSubjects<typeof Article | typeof User> | "all";
@@ -34,8 +35,10 @@ export class CaslAbilityFactory {
 
         can(Action.UPDATE, Article, { authorId: user.id });
         cannot(Action.DELETE, Article, { isPublished: true });
+
         return build({
-            detectSubjectType: (item) => item.constructor,
+            detectSubjectType: (item) =>
+                item.constructor as ExtractSubjectType<Subjects>,
         });
     }
 }
