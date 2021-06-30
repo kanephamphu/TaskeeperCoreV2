@@ -1,3 +1,4 @@
+import { AccountType } from "enums/user/user.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { Gender, UserStatus } from "enums/user/user.enum";
@@ -5,10 +6,8 @@ import * as mongoose from "mongoose";
 import { LoginInformation } from "schemas/user/loginInformation.schema";
 import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 
-export type UserDocument = User & Document;
-
 @Schema()
-export class User {
+export class User extends Document {
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
         ref: "LoginInformation",
@@ -50,7 +49,7 @@ export class User {
     })
     phoneNumber: PhoneNumber;
 
-    @Prop({ type: String, required: true, unique: true})
+    @Prop({ type: String, required: true, unique: true })
     email: string;
 
     @Prop({ type: String, required: true, enum: AccountType })

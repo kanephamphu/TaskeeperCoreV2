@@ -1,7 +1,7 @@
 export enum Gender {
     MALE = "male",
     FEMALE = "female",
-    UNDEFIEND = "undefined",
+    UNDEFINED = "undefined",
 }
 
 export enum UserStatus {
