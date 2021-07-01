@@ -1,3 +1,3 @@
-export enum CACHE {
-    ISD_CODE = "ISD",
+export enum CODE_TABLE {
+    ISD_CODE = "ISDCode",
 }

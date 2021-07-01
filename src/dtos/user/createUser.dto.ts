@@ -11,6 +11,7 @@ import {
     MinLength,
     IsObject,
 } from "class-validator";
+import { LoginInformation } from "dtos/user/loginInformation.dto";
 
 export class UserPhoneNumber {
     @IsString()
@@ -22,14 +23,6 @@ export class UserPhoneNumber {
     @MaxLength(30)
     @IsNotEmpty()
     readonly phoneNumber: string;
-}
-
-export class LoginInformation {
-    @IsString()
-    @MinLength(8)
-    @MaxLength(24)
-    @IsNotEmpty()
-    readonly password: string;
 }
 
 export class CreateUserDto {

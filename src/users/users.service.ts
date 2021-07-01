@@ -1,3 +1,4 @@
+import UserLoginDto from "dtos/user/login.dto";
 import { CreateUserDto } from "dtos/user/createUser.dto";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtPayload } from "auth/interfaces/payload.interface";
@@ -21,7 +22,42 @@ export class UsersService {
         return createdUser.save();
     }
 
-    // async findByPayload({ loginString }: JwtPayload): Promise<UserDto> {
-    //     return await this.findOne(loginString);
-    // }
+    public async login(userLoginDto: UserLoginDto): Promise<User> {
+        const loginQuery = this.buildLoginQuery(userLoginDto);
+        const user = await this.userModel.findOne(loginQuery);
+
+        return user;
+    }
+
+    private buildLoginQuery(userLoginDto: UserLoginDto): any {
+        const facebookTokenLogin = {
+            loginInformation: {
+                facebookToken: userLoginDto.loginInformation.facebookToken,
+            },
+        };
+        const googleTokenLogin = {
+            loginInformation: {
+                googleToken: userLoginDto.loginInformation.googleToken,
+            },
+        };
+        const normalLogin = {
+            loginInformation: {
+                password: userLoginDto.loginInformation.password,
+            },
+            $or: [
+                {
+                    phoneNumber: {
+                        phoneNumber: userLoginDto.loginString,
+                    },
+                },
+                {
+                    email: userLoginDto.loginString,
+                },
+            ],
+        };
+
+        return {
+            $or: [normalLogin, facebookTokenLogin, googleTokenLogin],
+        };
+    }
 }
