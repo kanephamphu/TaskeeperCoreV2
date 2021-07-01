@@ -1,16 +1,6 @@
 import { CreateUserDto } from "dtos/user/createUser.dto";
 import { UsersService } from "users/users.service";
-import {
-    Controller,
-    Get,
-    UseGuards,
-    Query,
-    Param,
-    Body,
-    Res,
-    Post,
-    HttpStatus,
-} from "@nestjs/common";
+import { Controller, Body, Res, Post, HttpStatus } from "@nestjs/common";
 import { JwtAuthGuard } from "auth/guards/jwt-auth.guard";
 import { CREATE_USER_MESSAGE } from "enums/message/message.enum";
 
@@ -39,6 +29,7 @@ export default class UserController {
                 .status(HttpStatus.CREATED)
                 .json({ message: CREATE_USER_MESSAGE.SUCCESS, user });
         } catch (error) {
+            console.error(error);
             //Todo: Error Handler
             return res.status(HttpStatus.BAD_REQUEST).json({
                 message: CREATE_USER_MESSAGE.FAILED,
