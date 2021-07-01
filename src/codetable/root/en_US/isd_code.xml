@@ -1,4 +1,4 @@
-<xml>
+<CodeData>
    <ISDCode>
       <CodeId>1</CodeId>
       <CodeValue>+1</CodeValue>
@@ -16,7 +16,7 @@
    </ISDCode>
    <ISDCode>
       <CodeId>84</CodeId>
-      <CodeValue>+ 84</CodeValue>
+      <CodeValue>+84</CodeValue>
       <CodeDescription>Viet Nam</CodeDescription>
    </ISDCode>
   <ISDCode>
@@ -24,4 +24,4 @@
       <CodeValue>+93</CodeValue>
       <CodeDescription>Cộng Hòa Afghanistan </CodeDescription>
    </ISDCode>
-</xml>
+</CodeData>

@@ -12,7 +12,7 @@ import {
 import { LanguageCode } from "enums/codetable/language.enum";
 import { CodeTableDir } from "enums/codetable/codetableDirectories.enum";
 import * as fs from "fs";
-import { CACHE } from "enums/codetable/cache.enum";
+import { CODE_TABLE } from "enums/codetable/cache.enum";
 import { Cache } from "cache-manager";
 
 @Controller("codetables")
@@ -25,8 +25,9 @@ export default class CodeTablesController {
 
     @Get("isdcode")
     async getISDCode(@Res() res, @Query() req) {
-        const languageCode: LanguageCode = req.languageCode;
-        const cacheKey = `${CACHE}${languageCode}`;
+        const languageCode: LanguageCode =
+            req.languageCode || LanguageCode.US_ENG;
+        const cacheKey = `${CODE_TABLE}${languageCode}`;
         let isdCodeData = await this.cacheManager.get(cacheKey);
         if (!isdCodeData) {
             const codeTableXml = `${this.rootCodeTableDir}/${languageCode}/${CodeTableDir.ISD_CODE}`;
@@ -36,7 +37,10 @@ export default class CodeTablesController {
                 EncodingType.UTF8
             );
 
-            isdCodeData = this.codeTableService.mapISDCodeTable(xmlISDData);
+            isdCodeData = this.codeTableService.handleCodeTable(
+                xmlISDData,
+                CODE_TABLE.ISD_CODE
+            );
 
             await this.cacheManager.set(cacheKey, isdCodeData);
         }

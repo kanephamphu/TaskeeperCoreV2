@@ -3,6 +3,7 @@ import { UsersService } from "users/users.service";
 import { Controller, Body, Res, Post, HttpStatus } from "@nestjs/common";
 import { JwtAuthGuard } from "auth/guards/jwt-auth.guard";
 import { CREATE_USER_MESSAGE } from "enums/message/message.enum";
+import UserLoginDto from "dtos/user/login.dto";
 
 @Controller("users")
 export default class UserController {
@@ -27,6 +28,25 @@ export default class UserController {
 
             return res
                 .status(HttpStatus.CREATED)
+                .json({ message: CREATE_USER_MESSAGE.SUCCESS, user });
+        } catch (error) {
+            console.error(error);
+            //Todo: Error Handler
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: CREATE_USER_MESSAGE.FAILED,
+                error,
+                status: 400,
+            });
+        }
+    }
+
+    @Post("login")
+    public async login(@Res() res, @Body() userLoginDto: UserLoginDto) {
+        try {
+            const user = await this.usersService.login(userLoginDto);
+
+            return res
+                .status(HttpStatus.ACCEPTED)
                 .json({ message: CREATE_USER_MESSAGE.SUCCESS, user });
         } catch (error) {
             console.error(error);
