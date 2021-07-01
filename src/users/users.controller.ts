@@ -59,7 +59,7 @@ export default class UserController {
         try {
             const user = await this.usersService.login(userLoginDto);
 
-            if (!!user) {
+            if (user) {
                 return res
                     .status(HttpStatus.ACCEPTED)
                     .json({ message: USER_LOGIN_MESSAGE.SUCCESS, user });

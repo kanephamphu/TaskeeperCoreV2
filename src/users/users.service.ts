@@ -41,14 +41,16 @@ export class UsersService {
             },
         };
         const normalLogin = {
-            password: {
-                googleToken: userLoginDto.loginInformation.password,
+            loginInformation: {
+                password: userLoginDto.loginInformation.password,
             },
             $or: [
                 {
                     phoneNumber: {
                         phoneNumber: userLoginDto.loginString,
                     },
+                },
+                {
                     email: userLoginDto.loginString,
                 },
             ],
