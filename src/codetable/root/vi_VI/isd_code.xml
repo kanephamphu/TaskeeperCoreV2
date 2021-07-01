@@ -1,0 +1,27 @@
+<xml>
+   <ISDCode>
+      <CodeId>1</CodeId>
+      <CodeValue>+1</CodeValue>
+      <CodeDescription>Mỹ</CodeDescription>
+   </ISDCode>
+   <ISDCode>
+      <CodeId>44</CodeId>
+      <CodeValue>+44</CodeValue>
+      <CodeDescription>Anh</CodeDescription>
+   </ISDCode>
+   <ISDCode>
+      <CodeId>55</CodeId>
+      <CodeValue>+55</CodeValue>
+      <CodeDescription>Brazil</CodeDescription>
+   </ISDCode>
+   <ISDCode>
+      <CodeId>84</CodeId>
+      <CodeValue>+ 84</CodeValue>
+      <CodeDescription>Việt Nam</CodeDescription>
+   </ISDCode>
+  <ISDCode>
+      <CodeId>93</CodeId>
+      <CodeValue>+93</CodeValue>
+      <CodeDescription>Cộng Hòa Afghanistan </CodeDescription>
+   </ISDCode>
+</xml>
