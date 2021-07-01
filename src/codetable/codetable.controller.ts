@@ -25,7 +25,7 @@ export default class CodeTablesController {
 
     @Get("isdcode")
     async getISDCode(@Res() res, @Query() req) {
-        const languageCode: LanguageCode = LanguageCode.VI;
+        const languageCode: LanguageCode = req.languageCode;
         const cacheKey = `${CACHE}${languageCode}`;
         let isdCodeData = await this.cacheManager.get(cacheKey);
         if (!isdCodeData) {

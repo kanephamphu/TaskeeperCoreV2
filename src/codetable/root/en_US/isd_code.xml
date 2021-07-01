@@ -2,12 +2,12 @@
    <ISDCode>
       <CodeId>1</CodeId>
       <CodeValue>+1</CodeValue>
-      <CodeDescription>Mỹ</CodeDescription>
+      <CodeDescription>United States</CodeDescription>
    </ISDCode>
    <ISDCode>
       <CodeId>44</CodeId>
       <CodeValue>+44</CodeValue>
-      <CodeDescription>Anh</CodeDescription>
+      <CodeDescription>United Kingdom</CodeDescription>
    </ISDCode>
    <ISDCode>
       <CodeId>55</CodeId>
@@ -17,7 +17,7 @@
    <ISDCode>
       <CodeId>84</CodeId>
       <CodeValue>+ 84</CodeValue>
-      <CodeDescription>Việt Nam</CodeDescription>
+      <CodeDescription>Viet Nam</CodeDescription>
    </ISDCode>
   <ISDCode>
       <CodeId>93</CodeId>
