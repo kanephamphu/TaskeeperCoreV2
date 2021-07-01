@@ -1,9 +1,21 @@
 import { CreateUserDto } from "dtos/user/createUser.dto";
 import { UsersService } from "users/users.service";
-import { Controller, Body, Res, Post, HttpStatus } from "@nestjs/common";
+import {
+    Controller,
+    Body,
+    Res,
+    Post,
+    HttpStatus,
+    UsePipes,
+    ValidationPipe,
+} from "@nestjs/common";
 import { JwtAuthGuard } from "auth/guards/jwt-auth.guard";
-import { CREATE_USER_MESSAGE } from "enums/message/message.enum";
+import {
+    CREATE_USER_MESSAGE,
+    USER_LOGIN_MESSAGE,
+} from "enums/message/message.enum";
 import UserLoginDto from "dtos/user/login.dto";
+import { validate } from "class-validator";
 
 @Controller("users")
 export default class UserController {
@@ -22,6 +34,7 @@ export default class UserController {
     // }
 
     @Post("create")
+    @UsePipes(new ValidationPipe({ transform: true }))
     public async create(@Res() res, @Body() createUserDto: CreateUserDto) {
         try {
             const user = await this.usersService.create(createUserDto);
@@ -41,21 +54,26 @@ export default class UserController {
     }
 
     @Post("login")
+    @UsePipes(new ValidationPipe({ transform: true }))
     public async login(@Res() res, @Body() userLoginDto: UserLoginDto) {
         try {
             const user = await this.usersService.login(userLoginDto);
 
-            return res
-                .status(HttpStatus.ACCEPTED)
-                .json({ message: CREATE_USER_MESSAGE.SUCCESS, user });
+            if (!!user) {
+                return res
+                    .status(HttpStatus.ACCEPTED)
+                    .json({ message: USER_LOGIN_MESSAGE.SUCCESS, user });
+            }
         } catch (error) {
-            console.error(error);
             //Todo: Error Handler
-            return res.status(HttpStatus.BAD_REQUEST).json({
-                message: CREATE_USER_MESSAGE.FAILED,
+            return res.status(HttpStatus.UNAUTHORIZED).json({
+                message: USER_LOGIN_MESSAGE.FAILED,
                 error,
-                status: 400,
             });
+        } finally {
+            return res
+                .status(HttpStatus.UNAUTHORIZED)
+                .json({ message: USER_LOGIN_MESSAGE.FAILED });
         }
     }
 }
