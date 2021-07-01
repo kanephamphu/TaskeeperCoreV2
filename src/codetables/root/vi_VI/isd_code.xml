@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<code>
+    <codeValue name="ISD_Code">
+        <content>
+            <![CDATA[ ]]>
+            <ISDCode>
+                <CodeTableID>
+                    84
+                </CodeTableID>
+                <ISDCode>
+                    + 84
+                </ISDCode>
+                <National>
+                    Việt Nam
+                </National>
+            </ISDCode>
+        </content>
+    </codeValue>
+</code>
