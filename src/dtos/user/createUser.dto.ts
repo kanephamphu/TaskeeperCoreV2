@@ -8,18 +8,28 @@ import {
     IsNumber,
     IsNotEmptyObject,
     IsPositive,
+    MinLength,
+    IsObject,
 } from "class-validator";
 
 export class UserPhoneNumber {
     @IsString()
     @MaxLength(30)
     @IsNotEmpty()
-    readonly ISDCodeId: string;
+    readonly ISD_CodeId: string;
 
     @IsString()
     @MaxLength(30)
     @IsNotEmpty()
     readonly phoneNumber: string;
+}
+
+export class LoginInformation {
+    @IsString()
+    @MinLength(8)
+    @MaxLength(24)
+    @IsNotEmpty()
+    readonly password: string;
 }
 
 export class CreateUserDto {
@@ -62,7 +72,7 @@ export class CreateUserDto {
     @IsEnum(Gender)
     readonly gender: string;
 
-    @IsString()
+    @IsObject()
     @IsNotEmpty()
-    readonly password: string;
+    readonly loginInformation: LoginInformation;
 }

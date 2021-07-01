@@ -9,8 +9,6 @@ import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 @Schema()
 export class User extends Document {
     @Prop({
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "LoginInformation",
         required: true,
     })
     loginInformation: LoginInformation;
@@ -21,14 +19,14 @@ export class User extends Document {
     @Prop({ type: String, required: true })
     lastName: string;
 
-    @Prop()
+    @Prop({ type: Date, default: Date.now() })
     createdAt: Date;
 
     @Prop()
     updatedAt: Date;
 
     @Prop({ type: Number, required: true })
-    dateOfBirth: number;
+    dayOfBirth: number;
 
     @Prop({ type: Number, required: true })
     monthOfBirth: number;
@@ -39,12 +37,15 @@ export class User extends Document {
     @Prop({ type: String, required: true, enum: Gender })
     gender: string;
 
-    @Prop({ type: String, required: true, enum: UserStatus })
+    @Prop({
+        type: String,
+        required: true,
+        enum: UserStatus,
+        default: UserStatus.INACTIVE,
+    })
     userStatus: string;
 
     @Prop({
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "PhoneNumber",
         required: true,
     })
     phoneNumber: PhoneNumber;
@@ -52,7 +53,12 @@ export class User extends Document {
     @Prop({ type: String, required: true, unique: true })
     email: string;
 
-    @Prop({ type: String, required: true, enum: AccountType })
+    @Prop({
+        type: String,
+        required: true,
+        enum: AccountType,
+        default: AccountType.NORMAL_USER,
+    })
     accountType: string;
 }
 

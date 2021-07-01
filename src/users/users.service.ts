@@ -15,9 +15,10 @@ export class UsersService {
         private readonly userModel: Model<User>
     ) {}
 
-    public async create(createCustomerDto: CreateUserDto): Promise<any> {
-        const newCustomer = await new this.userModel(createCustomerDto);
-        return newCustomer.save();
+    public async create(createUserDto: CreateUserDto): Promise<User> {
+        const createdUser = new this.userModel(createUserDto);
+
+        return createdUser.save();
     }
 
     // async findByPayload({ loginString }: JwtPayload): Promise<UserDto> {
