@@ -14,6 +14,7 @@ import { CodeTableDir } from "enums/codetable/codetableDirectories.enum";
 import * as fs from "fs";
 import { CODE_TABLE } from "enums/codetable/cache.enum";
 import { Cache } from "cache-manager";
+import { CODE_TABLE_MESSAGE } from "enums/message/message.enum";
 
 @Controller("codetables")
 export default class CodeTablesController {
@@ -46,7 +47,7 @@ export default class CodeTablesController {
         }
 
         return res.status(HttpStatus.OK).json({
-            message: "success",
+            message: CODE_TABLE_MESSAGE.SUCCESS,
             data: isdCodeData,
         });
     }
