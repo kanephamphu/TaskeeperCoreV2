@@ -36,7 +36,7 @@ export default class UserController {
             const user = await this.usersService.create(createUserDto);
 
             return res
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .json({ message: CREATE_USER_MESSAGE.SUCCESS, user });
         } catch (error) {
             //Todo: Error Handler
