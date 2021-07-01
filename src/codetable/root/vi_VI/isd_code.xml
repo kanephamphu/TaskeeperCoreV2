@@ -1,5 +1,4 @@
-<ISDCodes>
-   <![CDATA[ ]]>
+<xml>
    <ISDCode>
       <CodeId>1</CodeId>
       <CodeValue>+ 1</CodeValue>
@@ -10,4 +9,4 @@
       <CodeValue>+ 2</CodeValue>
       <CodeDescription>Việt Nam</CodeDescription>
    </ISDCode>
-</ISDCodes>
+</xml>

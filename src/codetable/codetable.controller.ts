@@ -1,3 +1,4 @@
+import { CodeTablesService } from "codetable/codetable.service";
 import { EncodingType } from "enums/codetable/codetableDirectories.enum";
 import {
     CACHE_MANAGER,
@@ -11,19 +12,22 @@ import {
 import { LanguageCode } from "enums/codetable/language.enum";
 import { CodeTableDir } from "enums/codetable/codetableDirectories.enum";
 import * as fs from "fs";
-import * as xml from "xml-js";
 import { CACHE } from "enums/codetable/cache.enum";
+import { Cache } from "cache-manager";
 
 @Controller("codetables")
 export default class CodeTablesController {
-    constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+    constructor(
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
+        private codeTableService: CodeTablesService
+    ) {}
     rootCodeTableDir = "src/codetable/root";
 
     @Get("isdcode")
     async getISDCode(@Res() res, @Query() req) {
         const languageCode: LanguageCode = LanguageCode.VI;
-        const cacheCode = `${CACHE}${languageCode}`;
-        let isdCodeData = await this.cacheManager.get(cacheCode);
+        const cacheKey = `${CACHE}${languageCode}`;
+        let isdCodeData = await this.cacheManager.get(cacheKey);
         if (!isdCodeData) {
             const codeTableXml = `${this.rootCodeTableDir}/${languageCode}/${CodeTableDir.ISD_CODE}`;
 
@@ -31,13 +35,10 @@ export default class CodeTablesController {
                 codeTableXml,
                 EncodingType.UTF8
             );
-            isdCodeData = JSON.parse(
-                xml.xml2json(isdCodeData, {
-                    compact: true,
-                    spaces: 4,
-                })
-            );
-            await this.cacheManager.set(cacheCode, isdCodeData);
+
+            isdCodeData = this.codeTableService.mapISDCodeTable(xmlISDData);
+
+            await this.cacheManager.set(cacheKey, isdCodeData);
         }
 
         return res.status(HttpStatus.OK).json({
