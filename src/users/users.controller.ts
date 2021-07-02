@@ -16,10 +16,14 @@ import {
 } from "enums/message/message.enum";
 import UserLoginDto from "dtos/user/login.dto";
 import * as _ from "lodash";
+import { MailService } from "mail/mail.service";
 
 @Controller("users")
 export default class UserController {
-    constructor(private usersService: UsersService) {}
+    constructor(
+        private usersService: UsersService,
+        private mailService: MailService
+    ) {}
 
     // @UseGuards(JwtAuthGuard)
     // @Get()
@@ -38,15 +42,18 @@ export default class UserController {
     public async create(@Res() res, @Body() createUserDto: CreateUserDto) {
         try {
             const user = await this.usersService.create(createUserDto);
-            const {
-                verifyInformation,
-                loginInformation,
-                ...data
-            } = user.toObject();
 
-            return res
-                .status(HttpStatus.CREATED)
-                .json({ message: CREATE_USER_MESSAGE.SUCCESS, data });
+            if (user) {
+                const {
+                    verifyInformation,
+                    loginInformation,
+                    ...data
+                } = user.toObject();
+                this.mailService.sendUserVerification(user);
+                return res
+                    .status(HttpStatus.CREATED)
+                    .json({ message: CREATE_USER_MESSAGE.SUCCESS, data });
+            }
         } catch (error) {
             console.error(error);
             //Todo: Error Handler
@@ -54,6 +61,10 @@ export default class UserController {
                 message: CREATE_USER_MESSAGE.FAILED,
                 error,
             });
+        } finally {
+            return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: CREATE_USER_MESSAGE.FAILED });
         }
     }
 

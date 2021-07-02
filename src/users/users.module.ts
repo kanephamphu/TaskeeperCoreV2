@@ -7,6 +7,7 @@ import UserController from "users/users.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { JwtModule } from "@nestjs/jwt";
 import { jwtConstants } from "auth/auth.constants";
+import { MailModule } from "mail/mail.module";
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
@@ -14,6 +15,7 @@ import { jwtConstants } from "auth/auth.constants";
             secret: jwtConstants.access_token,
             signOptions: { expiresIn: "60s" },
         }),
+        MailModule,
     ],
     controllers: [UserController],
     providers: [UsersService, JwtAuthGuard],
