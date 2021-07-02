@@ -8,9 +8,8 @@ export const buildVerificationInformation = (
 ): VerifyInformationDto => {
     const verificationInformationDto = new VerifyInformationDto();
     verificationInformationDto.token = Str.random();
-    verificationInformationDto.verifyNumber = Math.floor(
-        Math.random() * 10000
-    ).toString();
+    verificationInformationDto.verifyNumber =
+        1000 + Math.floor(Math.random() * 10000);
     verificationInformationDto.timeToLive = addDays(new Date(), 1);
     verificationInformationDto.verificationType = verificationType;
 

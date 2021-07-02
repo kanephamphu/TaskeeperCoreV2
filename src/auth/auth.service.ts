@@ -5,8 +5,11 @@ import { LoginStatus } from "auth/interfaces/login-status.interface";
 
 @Injectable()
 export class AuthService {
-    constructor() {}
+    constructor(private usersService: UsersService) {}
 
+    verifyByToken(token: string, userId: string): Promise<boolean | Error> {
+        return this.usersService.verifyAccountByToken(token, userId);
+    }
     // async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
     //     // find user in db
     //     const user = await this.usersService.findByLogin(loginUserDto);

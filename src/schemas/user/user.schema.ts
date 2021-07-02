@@ -1,8 +1,8 @@
+import { LanguageCode } from "enums/codetable/language.enum";
 import { AccountType } from "enums/user/user.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { Gender, AccountStatus } from "enums/user/user.enum";
-import * as mongoose from "mongoose";
 import { LoginInformation } from "schemas/user/loginInformation.schema";
 import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 import { VerifyInformation } from "schemas/user/verifyInformation.schema";
@@ -61,8 +61,12 @@ export class User extends Document {
         default: AccountType.NORMAL_USER,
     })
     accountType: string;
+
     @Prop()
     verifyInformation: VerifyInformation;
+
+    @Prop({ type: String, enum: LanguageCode })
+    languageCode: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

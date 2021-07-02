@@ -13,6 +13,7 @@ import { MailModule } from "./mail/mail.module";
             "mongodb+srv://taskeeper_admin:ranDomPassword1608@cluster0.bctkf.mongodb.net/TaskeeperDev?retryWrites=true&w=majority"
         ),
         CodetableModule,
+        AuthModule,
     ],
 })
 export class AppModule {}

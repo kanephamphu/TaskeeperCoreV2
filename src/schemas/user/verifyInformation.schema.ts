@@ -7,7 +7,7 @@ export class VerifyInformation extends Document {
     @Prop({ type: String, required: true })
     token: string;
 
-    @Prop({ type: String, required: true })
+    @Prop({ type: Number, required: true })
     verifyNumber: string;
 
     @Prop({ type: Date, required: true })
@@ -15,4 +15,7 @@ export class VerifyInformation extends Document {
 
     @Prop({ type: String, required: true, enum: VerificationType })
     verificationType: string;
+
+    @Prop({ type: Boolean, required: true, default: false })
+    isUsed: boolean;
 }

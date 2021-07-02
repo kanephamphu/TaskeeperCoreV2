@@ -1,3 +1,6 @@
+import { AccountStatus } from "enums/user/user.enum";
+import { compareDateTime, COMPARE_TYPE } from "shared/utils/dateHelper";
+import { getLanguageCodeByISDCode } from "shared/utils/codeTableHelper";
 import { buildVerificationInformation } from "shared/querybuilder/verifyInformation.builder";
 import { buildJwtPayload } from "shared/utils/authHelper";
 import { hashPassword, comparePasswords } from "shared/utils/stringHelper";
@@ -8,9 +11,10 @@ import { Injectable } from "@nestjs/common";
 import * as _ from "lodash";
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "schemas/user/user.schema";
-import { Model } from "mongoose";
+import { Error, Model } from "mongoose";
 import { JwtService } from "@nestjs/jwt";
 import { VerificationType } from "enums/user/user.enum";
+import { ErrorMessage } from "enums/message/message.enum";
 
 @Injectable()
 export class UsersService {
@@ -27,8 +31,11 @@ export class UsersService {
         const verifyInformation = buildVerificationInformation(
             VerificationType.REGISTER
         );
+        const languageCode = getLanguageCodeByISDCode(
+            createUserDto.phoneNumber.ISD_CodeId
+        );
         const createdUser = new this.userModel(
-            _.assign(createUserDto, { verifyInformation })
+            _.assign(createUserDto, { verifyInformation, languageCode })
         );
 
         return createdUser.save();
@@ -60,5 +67,37 @@ export class UsersService {
         }
 
         return;
+    }
+
+    public async verifyAccountByToken(
+        token: string,
+        userId: string
+    ): Promise<boolean | Error> {
+        let user = await this.userModel.findById(userId);
+
+        if (user) {
+            if (
+                compareDateTime(
+                    new Date(),
+                    user.verifyInformation.timeToLive,
+                    COMPARE_TYPE.SMALLER_OR_EQUAL
+                ) &&
+                user.accountStatus === AccountStatus.INACTIVE
+            ) {
+                if (user.verifyInformation.token === token) {
+                    user.verifyInformation.isUsed = true;
+                    user.accountStatus = AccountStatus.FIRST_TIME;
+                    await this.userModel.updateOne({ _id: userId }, user);
+                } else {
+                    throw new Error(ErrorMessage.WRONG_TOKEN);
+                }
+            } else {
+                throw new Error(ErrorMessage.TOKEN_EXPIRED);
+            }
+        } else {
+            throw new Error(ErrorMessage.NOT_FOUND);
+        }
+
+        return true;
     }
 }
