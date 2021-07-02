@@ -53,7 +53,6 @@ export default class UserController {
             return res.status(HttpStatus.BAD_REQUEST).json({
                 message: CREATE_USER_MESSAGE.FAILED,
                 error,
-                status: 400,
             });
         }
     }
