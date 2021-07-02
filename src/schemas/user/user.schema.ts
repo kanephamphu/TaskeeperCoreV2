@@ -1,10 +1,11 @@
 import { AccountType } from "enums/user/user.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { Gender, UserStatus } from "enums/user/user.enum";
+import { Gender, AccountStatus } from "enums/user/user.enum";
 import * as mongoose from "mongoose";
 import { LoginInformation } from "schemas/user/loginInformation.schema";
 import { PhoneNumber } from "schemas/user/phoneNumber.schema";
+import { VerifyInformation } from "schemas/user/verifyInformation.schema";
 
 @Schema()
 export class User extends Document {
@@ -40,10 +41,10 @@ export class User extends Document {
     @Prop({
         type: String,
         required: true,
-        enum: UserStatus,
-        default: UserStatus.INACTIVE,
+        enum: AccountStatus,
+        default: AccountStatus.INACTIVE,
     })
-    userStatus: string;
+    accountStatus: string;
 
     @Prop({
         required: true,
@@ -60,6 +61,8 @@ export class User extends Document {
         default: AccountType.NORMAL_USER,
     })
     accountType: string;
+    @Prop()
+    verifyInformation: VerifyInformation;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

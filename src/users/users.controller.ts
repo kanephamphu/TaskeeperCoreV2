@@ -66,7 +66,7 @@ export default class UserController {
             }
         } catch (error) {
             //Todo: Error Handler
-            return res.status(HttpStatus.UNAUTHORIZED).json({
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 message: USER_LOGIN_MESSAGE.FAILED,
                 error,
             });
