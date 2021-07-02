@@ -1,4 +1,4 @@
-import { TokenType } from "enums/user/user.enum";
+import { VerificationType } from "enums/user/user.enum";
 import { Prop, Schema } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
@@ -13,6 +13,6 @@ export class VerifyInformation extends Document {
     @Prop({ type: Date, required: true })
     timeToLive: Date;
 
-    @Prop({ type: String, required: true, enum: TokenType })
-    tokenType: string;
+    @Prop({ type: String, required: true, enum: VerificationType })
+    verificationType: string;
 }

@@ -17,7 +17,7 @@ export enum AccountType {
     PREMIUM_USER = "premiumUser",
 }
 
-export enum TokenType {
+export enum VerificationType {
     REGISTER = "register",
     SEND_MONEY = "sendMoney",
     RESET_PASSWORD = "resetPassword",
