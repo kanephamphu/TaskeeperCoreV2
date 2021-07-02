@@ -1,3 +1,4 @@
+import { AccountStatus } from "enums/user/user.enum";
 import UserLoginDto from "dtos/user/login.dto";
 
 export const buildLoginQuery = (userLoginDto: UserLoginDto): any => {

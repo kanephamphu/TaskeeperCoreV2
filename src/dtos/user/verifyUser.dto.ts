@@ -1,12 +1,12 @@
 import { VerificationType } from "enums/user/user.enum";
-import { IsDate, IsEnum, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsEnum, IsNumber, IsString } from "class-validator";
 
 export default class VerifyInformationDto {
     @IsString()
     token: string;
 
-    @IsString()
-    verifyNumber: string;
+    @IsNumber()
+    verifyNumber: number;
 
     @IsDate()
     timeToLive: Date;
@@ -14,4 +14,7 @@ export default class VerifyInformationDto {
     @IsString()
     @IsEnum(VerificationType)
     verificationType: string;
+
+    @IsBoolean()
+    isUsed: boolean = false;
 }

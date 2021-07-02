@@ -12,3 +12,15 @@ export enum CODE_TABLE_MESSAGE {
     SUCCESS = "Get code table successfully",
     FAILED = "Error: Not found!",
 }
+
+export enum COMMON_MESSAGE {
+    BAD_REQUEST = "Error: Request not resolved",
+    SUCCESS = "Handle successfully",
+    FAILED = "Error: Not found!",
+}
+
+export enum ErrorMessage {
+    TOKEN_EXPIRED = "Token is expired",
+    NOT_FOUND = "Not found",
+    WRONG_TOKEN = "Wrong token",
+}

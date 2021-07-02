@@ -1,8 +1,8 @@
+import { UsersModule } from "users/users.module";
+import { AuthService } from "auth/auth.service";
 import AuthController from "auth/auth.controller";
-import { UsersService } from "users/users.service";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
-import { AuthService } from "auth/auth.service";
 import { JwtStrategy } from "auth/strategies/jwt.strategy";
 import { PassportModule } from "@nestjs/passport";
 @Module({
@@ -18,9 +18,10 @@ import { PassportModule } from "@nestjs/passport";
             //     expiresIn: `${process.env.EXPIRESIN}`,
             // },
         }),
+        UsersModule,
     ],
     controllers: [AuthController],
-    providers: [],
+    providers: [AuthService],
     exports: [],
 })
 export class AuthModule {}
