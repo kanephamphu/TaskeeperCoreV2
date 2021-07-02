@@ -15,7 +15,7 @@ import {
     USER_LOGIN_MESSAGE,
 } from "enums/message/message.enum";
 import UserLoginDto from "dtos/user/login.dto";
-import { validate } from "class-validator";
+import * as _ from "lodash";
 
 @Controller("users")
 export default class UserController {
@@ -38,10 +38,15 @@ export default class UserController {
     public async create(@Res() res, @Body() createUserDto: CreateUserDto) {
         try {
             const user = await this.usersService.create(createUserDto);
+            const {
+                verifyInformation,
+                loginInformation,
+                ...data
+            } = user.toObject();
 
             return res
                 .status(HttpStatus.CREATED)
-                .json({ message: CREATE_USER_MESSAGE.SUCCESS, user });
+                .json({ message: CREATE_USER_MESSAGE.SUCCESS, data });
         } catch (error) {
             console.error(error);
             //Todo: Error Handler

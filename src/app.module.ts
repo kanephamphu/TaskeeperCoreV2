@@ -4,6 +4,7 @@ import { Module } from "@nestjs/common";
 import { CaslModule } from "./casl/casl.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { CodetableModule } from "codetable/codetable.module";
+import { MailModule } from "./mail/mail.module";
 
 @Module({
     imports: [
