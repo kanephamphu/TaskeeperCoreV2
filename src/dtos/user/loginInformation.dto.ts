@@ -5,7 +5,7 @@ export class LoginInformation {
     @MinLength(8)
     @MaxLength(24)
     @IsNotEmpty()
-    readonly password: string;
+    password: string;
 
     @IsString()
     readonly facebookToken: string;

@@ -6,6 +6,6 @@ export class PhoneNumber extends Document {
     @Prop({ type: String, required: true })
     ISD_CodeId: string;
 
-    @Prop({ type: String, required: true })
+    @Prop({ type: String, required: true, unique: true })
     phoneNumber: string;
 }

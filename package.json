@@ -29,6 +29,7 @@
         "@nestjs/passport": "^7.1.5",
         "@nestjs/platform-express": "^7.6.15",
         "@nestjs/swagger": "^4.8.1",
+        "@types/bcrypt": "^5.0.0",
         "@types/lodash": "^4.14.170",
         "bcrypt": "^5.0.1",
         "cache-manager": "^3.4.4",
