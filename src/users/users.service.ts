@@ -1,83 +1,103 @@
-import { LoginUserDto } from "users/dto/user-login.dto";
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { JwtPayload } from "auth/interfaces/payload.interface";
-import { UserDto } from "./dto/user.dto";
-import { toUserDto } from "shared/mapper/users/users.mapper";
-import { comparePasswords } from "shared/utils/stringHelper";
-import _ from "lodash";
+import { AccountStatus } from "enums/user/user.enum";
+import { compareDateTime, COMPARE_TYPE } from "shared/utils/dateHelper";
+import { getLanguageCodeByISDCode } from "shared/utils/codeTableHelper";
+import { buildVerificationInformation } from "shared/querybuilder/verifyInformation.builder";
+import { buildJwtPayload } from "shared/utils/authHelper";
+import { hashPassword, comparePasswords } from "shared/utils/stringHelper";
+import { buildLoginQuery } from "shared/querybuilder/userQuery.builder";
+import UserLoginDto from "dtos/user/login.dto";
+import { CreateUserDto } from "dtos/user/createUser.dto";
+import { Injectable } from "@nestjs/common";
+import * as _ from "lodash";
+import { InjectModel } from "@nestjs/mongoose";
+import { User } from "schemas/user/user.schema";
+import { Error, Model } from "mongoose";
+import { JwtService } from "@nestjs/jwt";
+import { VerificationType } from "enums/user/user.enum";
+import { ErrorMessage } from "enums/message/message.enum";
 
-export type User = any;
-//https://www.codemag.com/Article/2001081/Nest.js-Step-by-Step-Part-3-Users-and-Authentication
 @Injectable()
 export class UsersService {
-    private readonly users: User[];
+    constructor(
+        @InjectModel(User.name)
+        private readonly userModel: Model<User>,
+        private jwtService: JwtService
+    ) {}
 
-    constructor() {
-        this.users = [
-            {
-                userId: 1,
-                loginString: "john",
-                password:
-                    "$2y$12$7RZNSKm2Exu/MSaW/GrGeOBduZqgRv6eFXChdd2zHybgi8PlzpcQm",
-            },
-            {
-                userId: 2,
-                loginString: "chris",
-                password: "secret",
-            },
-            {
-                userId: 3,
-                loginString: "maria",
-                password: "guess",
-            },
-        ];
+    public async create(createUserDto: CreateUserDto): Promise<User> {
+        createUserDto.loginInformation.password = await hashPassword(
+            createUserDto.loginInformation.password
+        );
+        const verifyInformation = buildVerificationInformation(
+            VerificationType.REGISTER
+        );
+        const languageCode = getLanguageCodeByISDCode(
+            createUserDto.phoneNumber.ISD_CodeId
+        );
+        const createdUser = new this.userModel(
+            _.assign(createUserDto, { verifyInformation, languageCode })
+        );
+
+        return createdUser.save();
     }
 
-    async findByLogin({
-        loginString,
-        password,
-    }: LoginUserDto): Promise<UserDto> {
-        const user = {
-            userId: 1,
-            loginString: "john",
-            password:
-                "$2b$12$7.CyhOsaVN8uQgKIUWIuO.Zr1dwd42U1W0npXjgjS6cDk2RxO2/fC",
-        };
+    public async login(userLoginDto: UserLoginDto): Promise<any> {
+        const loginQuery = buildLoginQuery(userLoginDto);
+        const user = await this.userModel.findOne(loginQuery);
+        let isValidate = true;
 
-        if (!user) {
-            throw new HttpException("User not found", HttpStatus.UNAUTHORIZED);
-        }
-
-        // compare passwords
-        let areEqual = await comparePasswords(user.password, password);
-        areEqual = true;
-
-        if (!areEqual) {
-            throw new HttpException(
-                "Invalid credentials",
-                HttpStatus.UNAUTHORIZED
+        if (
+            !userLoginDto.loginInformation.facebookToken &&
+            !userLoginDto.loginInformation.googleToken
+        ) {
+            isValidate = await comparePasswords(
+                userLoginDto.loginInformation.password,
+                user.loginInformation.password
             );
         }
 
-        return toUserDto(user);
+        if (isValidate) {
+            const payload = buildJwtPayload(user);
+
+            const resData = {
+                access_token: this.jwtService.sign(payload),
+            };
+
+            return resData;
+        }
+
+        return;
     }
 
-    async findOne(loginString?: string): Promise<UserDto> {
-        const user = {
-            userId: 1,
-            loginString: "john",
-            password:
-                "$2b$12$7.CyhOsaVN8uQgKIUWIuO.Zr1dwd42U1W0npXjgjS6cDk2RxO2/fC",
-        };
+    public async verifyAccountByToken(
+        token: string,
+        userId: string
+    ): Promise<boolean | Error> {
+        let user = await this.userModel.findById(userId);
 
-        return toUserDto(user);
-    }
+        if (user) {
+            if (
+                compareDateTime(
+                    new Date(),
+                    user.verifyInformation.timeToLive,
+                    COMPARE_TYPE.SMALLER_OR_EQUAL
+                ) &&
+                user.accountStatus === AccountStatus.INACTIVE
+            ) {
+                if (user.verifyInformation.token === token) {
+                    user.verifyInformation.isUsed = true;
+                    user.accountStatus = AccountStatus.FIRST_TIME;
+                    await this.userModel.updateOne({ _id: userId }, user);
+                } else {
+                    throw new Error(ErrorMessage.WRONG_TOKEN);
+                }
+            } else {
+                throw new Error(ErrorMessage.TOKEN_EXPIRED);
+            }
+        } else {
+            throw new Error(ErrorMessage.NOT_FOUND);
+        }
 
-    async findByPayload({ loginString }: JwtPayload): Promise<UserDto> {
-        return await this.findOne(loginString);
-    }
-
-    async findAll() {
-        return this.users;
+        return true;
     }
 }

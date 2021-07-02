@@ -1,12 +1,4 @@
-import { UserDto } from "users/dto/user.dto";
-import _ from "lodash";
-
-export const toUserDto = (data: any): UserDto => {
-    const { userId, loginString } = data;
-    const userDto: UserDto = {
-        userId,
-        loginString,
-    };
-
-    return userDto;
-};
+import { User } from "schemas/user/user.schema";
+import { CreateUserDto } from "dtos/user/createUser.dto";
+import { LoginInformation } from "schemas/user/loginInformation.schema";
+import { PhoneNumber } from "schemas/user/phoneNumber.schema";
