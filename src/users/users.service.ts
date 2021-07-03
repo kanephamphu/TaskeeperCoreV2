@@ -1,10 +1,16 @@
+import { MailService } from "mail/mail.service";
+import { COMMON_MESSAGE } from "enums/message/message.enum";
+import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { AccountStatus } from "enums/user/user.enum";
 import { compareDateTime, COMPARE_TYPE } from "shared/utils/dateHelper";
 import { getLanguageCodeByISDCode } from "shared/utils/codeTableHelper";
 import { buildVerificationInformation } from "shared/querybuilder/verifyInformation.builder";
 import { buildJwtPayload } from "shared/utils/authHelper";
 import { hashPassword, comparePasswords } from "shared/utils/stringHelper";
-import { buildLoginQuery } from "shared/querybuilder/userQuery.builder";
+import {
+    buildLoginQuery,
+    buildForgotPasswordQuery,
+} from "shared/querybuilder/userQuery.builder";
 import UserLoginDto from "dtos/user/login.dto";
 import { CreateUserDto } from "dtos/user/createUser.dto";
 import { Injectable } from "@nestjs/common";
@@ -21,7 +27,8 @@ export class UsersService {
     constructor(
         @InjectModel(User.name)
         private readonly userModel: Model<User>,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private mailService: MailService
     ) {}
 
     public async create(createUserDto: CreateUserDto): Promise<User> {
@@ -133,5 +140,27 @@ export class UsersService {
         }
 
         return true;
+    }
+
+    public async handleForgotPassword(
+        forgotPasswordDto: ForgotPasswordDto
+    ): Promise<string | Error> {
+        const forgotPasswordQuery = buildForgotPasswordQuery(forgotPasswordDto);
+        const user = await this.userModel.findOne(forgotPasswordQuery, ["_id"]);
+
+        if (user) {
+            const verifyInformation = buildVerificationInformation(
+                VerificationType.FORGOT_PASSWORD
+            );
+            const updatedUser = await this.userModel.findOneAndUpdate(
+                { _id: user._id },
+                { verifyInformation }
+            );
+            this.mailService.sendForgotPasswordEmail(updatedUser);
+
+            return user._id;
+        }
+
+        throw new Error(COMMON_MESSAGE.FAILED);
     }
 }

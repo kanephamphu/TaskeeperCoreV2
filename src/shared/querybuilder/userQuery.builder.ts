@@ -1,3 +1,4 @@
+import { ForgotPasswordDto } from "./../../dtos/auth/forgotPassword.dto";
 import { AccountStatus } from "enums/user/user.enum";
 import UserLoginDto from "dtos/user/login.dto";
 
@@ -27,5 +28,22 @@ export const buildLoginQuery = (userLoginDto: UserLoginDto): any => {
 
     return {
         $or: [normalLogin, facebookTokenLogin, googleTokenLogin],
+    };
+};
+
+export const buildForgotPasswordQuery = (
+    forgotPasswordDto: ForgotPasswordDto
+): Object => {
+    return {
+        $or: [
+            {
+                phoneNumber: {
+                    phoneNumber: forgotPasswordDto.forgotPasswordString,
+                },
+            },
+            {
+                email: forgotPasswordDto.forgotPasswordString,
+            },
+        ],
     };
 };

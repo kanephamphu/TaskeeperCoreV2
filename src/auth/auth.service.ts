@@ -1,3 +1,4 @@
+import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UsersService } from "users/users.service";
@@ -18,6 +19,13 @@ export class AuthService {
             numberVerifyDto.userId
         );
     }
+
+    handleForgotPassword(
+        forgotPasswordDto: ForgotPasswordDto
+    ): Promise<string | Error> {
+        return this.usersService.handleForgotPassword(forgotPasswordDto);
+    }
+
     // async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
     //     // find user in db
     //     const user = await this.usersService.findByLogin(loginUserDto);
