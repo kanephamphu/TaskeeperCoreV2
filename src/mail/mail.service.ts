@@ -23,4 +23,20 @@ export class MailService {
             },
         });
     }
+
+    async sendForgotPasswordEmail(user: User) {
+        const url = `${devServerURL}/auth/confirm?token=${user.verifyInformation.token}&id=${user._id}`;
+
+        await this.mailerService.sendMail({
+            to: `${user.email}`,
+            from: `"${getTeamName(user.languageCode)}" <support@taskeeper.net>`,
+            subject: `${getVerifyEmailSubject(user.languageCode)}`,
+            template: `./${user.languageCode}_forgotpassword`,
+            context: {
+                name: `${user.firstName}`,
+                url,
+                verifyNumber: `${user.verifyInformation.verifyNumber}`,
+            },
+        });
+    }
 }

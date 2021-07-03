@@ -89,4 +89,10 @@ export default class AuthController {
             });
         }
     }
+
+    @Post("forgotpassword")
+    @UsePipes()
+    public async forgotPassword(@Res() res, @Body() body: ForgotPasswordDto){
+
+    }
 }
