@@ -67,28 +67,4 @@ export default class UserController {
                 .json({ message: CREATE_USER_MESSAGE.FAILED });
         }
     }
-
-    @Post("login")
-    @UsePipes(new ValidationPipe({ transform: true }))
-    public async login(@Res() res, @Body() userLoginDto: UserLoginDto) {
-        try {
-            const user = await this.usersService.login(userLoginDto);
-
-            if (user) {
-                return res
-                    .status(HttpStatus.ACCEPTED)
-                    .json({ message: USER_LOGIN_MESSAGE.SUCCESS, user });
-            }
-        } catch (error) {
-            //Todo: Error Handler
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                message: USER_LOGIN_MESSAGE.FAILED,
-                error,
-            });
-        } finally {
-            return res
-                .status(HttpStatus.UNAUTHORIZED)
-                .json({ message: USER_LOGIN_MESSAGE.FAILED });
-        }
-    }
 }

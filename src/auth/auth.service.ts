@@ -1,3 +1,4 @@
+import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UsersService } from "users/users.service";
 import { JwtService } from "@nestjs/jwt";
@@ -9,6 +10,13 @@ export class AuthService {
 
     verifyByToken(token: string, userId: string): Promise<boolean | Error> {
         return this.usersService.verifyAccountByToken(token, userId);
+    }
+
+    verifyByNumber(numberVerifyDto: NumberVerifyDto): Promise<boolean | Error> {
+        return this.usersService.verifyAccountByNumber(
+            numberVerifyDto.number,
+            numberVerifyDto.userId
+        );
     }
     // async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
     //     // find user in db
