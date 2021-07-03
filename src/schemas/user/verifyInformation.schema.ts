@@ -8,10 +8,13 @@ export class VerifyInformation extends Document {
     token: string;
 
     @Prop({ type: Number, required: true })
-    verifyNumber: string;
+    verifyNumber: number;
 
     @Prop({ type: Date, required: true })
-    timeToLive: Date;
+    tokenTimeToLive: Date;
+
+    @Prop({ type: Date, required: true })
+    numberTimeToLive: Date;
 
     @Prop({ type: String, required: true, enum: VerificationType })
     verificationType: string;

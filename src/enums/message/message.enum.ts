@@ -23,4 +23,6 @@ export enum ErrorMessage {
     TOKEN_EXPIRED = "Token is expired",
     NOT_FOUND = "Not found",
     WRONG_TOKEN = "Wrong token",
+    NUMBER_EXPIRED = "Number is expired",
+    WRONG_NUMBER = "Wrong number",
 }

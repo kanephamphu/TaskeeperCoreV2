@@ -79,7 +79,7 @@ export class UsersService {
             if (
                 compareDateTime(
                     new Date(),
-                    user.verifyInformation.timeToLive,
+                    user.verifyInformation.tokenTimeToLive,
                     COMPARE_TYPE.SMALLER_OR_EQUAL
                 ) &&
                 user.accountStatus === AccountStatus.INACTIVE
@@ -93,6 +93,40 @@ export class UsersService {
                 }
             } else {
                 throw new Error(ErrorMessage.TOKEN_EXPIRED);
+            }
+        } else {
+            throw new Error(ErrorMessage.NOT_FOUND);
+        }
+
+        return true;
+    }
+
+    public async verifyAccountByNumber(
+        number: number,
+        userId: string
+    ): Promise<boolean | Error> {
+        let user = await this.userModel.findById(userId);
+
+        if (user) {
+            if (
+                compareDateTime(
+                    new Date(),
+                    user.verifyInformation.numberTimeToLive,
+                    COMPARE_TYPE.SMALLER_OR_EQUAL
+                ) &&
+                user.accountStatus === AccountStatus.INACTIVE &&
+                user.verifyInformation.verificationType ===
+                    VerificationType.REGISTER
+            ) {
+                if (user.verifyInformation.verifyNumber === number) {
+                    user.verifyInformation.isUsed = true;
+                    user.accountStatus = AccountStatus.FIRST_TIME;
+                    await this.userModel.updateOne({ _id: userId }, user);
+                } else {
+                    throw new Error(ErrorMessage.WRONG_NUMBER);
+                }
+            } else {
+                throw new Error(ErrorMessage.NUMBER_EXPIRED);
             }
         } else {
             throw new Error(ErrorMessage.NOT_FOUND);
