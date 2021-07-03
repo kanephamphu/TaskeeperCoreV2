@@ -77,16 +77,16 @@ export default class AuthController {
                     .status(HttpStatus.ACCEPTED)
                     .json({ message: USER_LOGIN_MESSAGE.SUCCESS, user });
             }
+
+            return res
+                .status(HttpStatus.NOT_FOUND)
+                .json({ message: USER_LOGIN_MESSAGE.FAILED });
         } catch (error) {
             //Todo: Error Handler
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 message: USER_LOGIN_MESSAGE.FAILED,
                 error,
             });
-        } finally {
-            return res
-                .status(HttpStatus.UNAUTHORIZED)
-                .json({ message: USER_LOGIN_MESSAGE.FAILED });
         }
     }
 }
