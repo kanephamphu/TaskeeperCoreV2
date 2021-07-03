@@ -1,3 +1,4 @@
+import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 import { UsersService } from "users/users.service";
 import { COMMON_MESSAGE, USER_LOGIN_MESSAGE } from "enums/message/message.enum";
@@ -76,11 +77,11 @@ export default class AuthController {
                 return res
                     .status(HttpStatus.ACCEPTED)
                     .json({ message: USER_LOGIN_MESSAGE.SUCCESS, user });
+            } else {
+                return res
+                    .status(HttpStatus.NOT_FOUND)
+                    .json({ message: USER_LOGIN_MESSAGE.FAILED });
             }
-
-            return res
-                .status(HttpStatus.NOT_FOUND)
-                .json({ message: USER_LOGIN_MESSAGE.FAILED });
         } catch (error) {
             //Todo: Error Handler
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -92,7 +93,24 @@ export default class AuthController {
 
     @Post("forgotpassword")
     @UsePipes()
-    public async forgotPassword(@Res() res, @Body() body: ForgotPasswordDto){
+    public async forgotPassword(
+        @Res() res,
+        @Body() forgotPasswordDto: ForgotPasswordDto
+    ) {
+        try {
+            const userId = await this.authService.handleForgotPassword(
+                forgotPasswordDto
+            );
 
+            res.status(HttpStatus.OK).json({
+                message: COMMON_MESSAGE.SUCCESS,
+                data: userId,
+            });
+        } catch (error) {
+            res.status(HttpStatus.NOT_FOUND).json({
+                message: COMMON_MESSAGE.BAD_REQUEST,
+                error,
+            });
+        }
     }
 }

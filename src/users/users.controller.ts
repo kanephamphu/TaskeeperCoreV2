@@ -10,11 +10,7 @@ import {
     ValidationPipe,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "auth/guards/jwt-auth.guard";
-import {
-    CREATE_USER_MESSAGE,
-    USER_LOGIN_MESSAGE,
-} from "enums/message/message.enum";
-import UserLoginDto from "dtos/user/login.dto";
+import { CREATE_USER_MESSAGE } from "enums/message/message.enum";
 import * as _ from "lodash";
 import { MailService } from "mail/mail.service";
 
