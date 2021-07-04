@@ -9,11 +9,16 @@ import { LoginStatus } from "auth/interfaces/login-status.interface";
 export class AuthService {
     constructor(private usersService: UsersService) {}
 
-    verifyByToken(token: string, userId: string): Promise<boolean | Error> {
+    verifyAccountByToken(
+        token: string,
+        userId: string
+    ): Promise<boolean | Error> {
         return this.usersService.verifyAccountByToken(token, userId);
     }
 
-    verifyByNumber(numberVerifyDto: NumberVerifyDto): Promise<boolean | Error> {
+    verifyAccountByNumber(
+        numberVerifyDto: NumberVerifyDto
+    ): Promise<boolean | Error> {
         return this.usersService.verifyAccountByNumber(
             numberVerifyDto.number,
             numberVerifyDto.userId
@@ -24,6 +29,12 @@ export class AuthService {
         forgotPasswordDto: ForgotPasswordDto
     ): Promise<string | Error> {
         return this.usersService.handleForgotPassword(forgotPasswordDto);
+    }
+
+    checkVerifyNumber(
+        numberVerifyDto: NumberVerifyDto
+    ): Promise<string | Error> {
+        return this.usersService.checkVerifyNumber(numberVerifyDto);
     }
 
     // async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {

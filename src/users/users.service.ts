@@ -1,5 +1,4 @@
 import { MailService } from "mail/mail.service";
-import { COMMON_MESSAGE } from "enums/message/message.enum";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { AccountStatus } from "enums/user/user.enum";
 import { compareDateTime, COMPARE_TYPE } from "shared/utils/dateHelper";
@@ -20,7 +19,8 @@ import { User } from "schemas/user/user.schema";
 import { Error, Model } from "mongoose";
 import { JwtService } from "@nestjs/jwt";
 import { VerificationType } from "enums/user/user.enum";
-import { ErrorMessage } from "enums/message/message.enum";
+import { ERROR_MESSAGE, COMMON_MESSAGE } from "enums/message/message.enum";
+import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 
 @Injectable()
 export class UsersService {
@@ -96,13 +96,13 @@ export class UsersService {
                     user.accountStatus = AccountStatus.FIRST_TIME;
                     await this.userModel.updateOne({ _id: userId }, user);
                 } else {
-                    throw new Error(ErrorMessage.WRONG_TOKEN);
+                    throw new Error(ERROR_MESSAGE.WRONG_TOKEN);
                 }
             } else {
-                throw new Error(ErrorMessage.TOKEN_EXPIRED);
+                throw new Error(ERROR_MESSAGE.TOKEN_EXPIRED);
             }
         } else {
-            throw new Error(ErrorMessage.NOT_FOUND);
+            throw new Error(ERROR_MESSAGE.NOT_FOUND);
         }
 
         return true;
@@ -130,13 +130,13 @@ export class UsersService {
                     user.accountStatus = AccountStatus.FIRST_TIME;
                     await this.userModel.updateOne({ _id: userId }, user);
                 } else {
-                    throw new Error(ErrorMessage.WRONG_NUMBER);
+                    throw new Error(ERROR_MESSAGE.WRONG_NUMBER);
                 }
             } else {
-                throw new Error(ErrorMessage.NUMBER_EXPIRED);
+                throw new Error(ERROR_MESSAGE.NUMBER_EXPIRED);
             }
         } else {
-            throw new Error(ErrorMessage.NOT_FOUND);
+            throw new Error(ERROR_MESSAGE.NOT_FOUND);
         }
 
         return true;
@@ -146,21 +146,48 @@ export class UsersService {
         forgotPasswordDto: ForgotPasswordDto
     ): Promise<string | Error> {
         const forgotPasswordQuery = buildForgotPasswordQuery(forgotPasswordDto);
-        const user = await this.userModel.findOne(forgotPasswordQuery, ["_id"]);
+        const user = await this.userModel.findOne(forgotPasswordQuery);
 
         if (user) {
             const verifyInformation = buildVerificationInformation(
                 VerificationType.FORGOT_PASSWORD
             );
-            const updatedUser = await this.userModel.findOneAndUpdate(
-                { _id: user._id },
-                { verifyInformation }
-            );
-            this.mailService.sendForgotPasswordEmail(updatedUser);
+            user.verifyInformation.$set(verifyInformation);
+            await user.save();
+            this.mailService.sendForgotPasswordEmail(user);
 
             return user._id;
         }
 
         throw new Error(COMMON_MESSAGE.FAILED);
+    }
+
+    public async checkVerifyNumber(
+        numberVerifyDto: NumberVerifyDto
+    ): Promise<string | Error> {
+        const user = await this.userModel.findById(numberVerifyDto.userId);
+
+        if (user) {
+            if (
+                compareDateTime(
+                    new Date(),
+                    user.verifyInformation.numberTimeToLive,
+                    COMPARE_TYPE.SMALLER_OR_EQUAL
+                )
+            ) {
+                if (
+                    user.verifyInformation.verifyNumber ===
+                    numberVerifyDto.number
+                ) {
+                    return user.verifyInformation.token;
+                }
+
+                throw new Error(ERROR_MESSAGE.WRONG_NUMBER);
+            }
+
+            throw new Error(ERROR_MESSAGE.NUMBER_EXPIRED);
+        }
+
+        throw new Error(COMMON_MESSAGE.USER_NOTFOUND);
     }
 }
