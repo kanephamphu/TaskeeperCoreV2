@@ -77,7 +77,7 @@ export default class AuthController {
             if (user) {
                 return res
                     .status(HttpStatus.ACCEPTED)
-                    .json({ message: USER_LOGIN_MESSAGE.SUCCESS, user });
+                    .json({ message: USER_LOGIN_MESSAGE.SUCCESS, data: user });
             } else {
                 return res
                     .status(HttpStatus.NOT_FOUND)
