@@ -1,3 +1,4 @@
+import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
@@ -9,11 +10,16 @@ import { LoginStatus } from "auth/interfaces/login-status.interface";
 export class AuthService {
     constructor(private usersService: UsersService) {}
 
-    verifyByToken(token: string, userId: string): Promise<boolean | Error> {
+    verifyAccountByToken(
+        token: string,
+        userId: string
+    ): Promise<boolean | Error> {
         return this.usersService.verifyAccountByToken(token, userId);
     }
 
-    verifyByNumber(numberVerifyDto: NumberVerifyDto): Promise<boolean | Error> {
+    verifyAccountByNumber(
+        numberVerifyDto: NumberVerifyDto
+    ): Promise<boolean | Error> {
         return this.usersService.verifyAccountByNumber(
             numberVerifyDto.number,
             numberVerifyDto.userId
@@ -26,37 +32,17 @@ export class AuthService {
         return this.usersService.handleForgotPassword(forgotPasswordDto);
     }
 
-    // async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
-    //     // find user in db
-    //     const user = await this.usersService.findByLogin(loginUserDto);
+    checkVerifyNumber(
+        numberVerifyDto: NumberVerifyDto
+    ): Promise<string | Error> {
+        return this.usersService.checkVerifyNumber(numberVerifyDto);
+    }
 
-    //     // generate and sign token
-    //     const token = this._createToken(user);
-
-    //     return {
-    //         loginString: user.loginString,
-    //         ...token,
-    //     };
-    // }
-
-    // async validateUser(payload: JwtPayload): Promise<UserDto> {
-    //     const user = await this.usersService.findByPayload(payload);
-    //     if (!user) {
-    //         throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED);
-    //     }
-
-    //     return user;
-    // }
-
-    // private _createToken({ loginString }: UserDto): any {
-    //     const expiresIn = process.env.EXPIRESIN;
-
-    //     const user: JwtPayload = { loginString };
-    //     const accessToken = this.jwtService.sign(user);
-
-    //     return {
-    //         expiresIn,
-    //         accessToken,
-    //     };
-    // }
+    changePasswordByToken(
+        changePasswordByTokenDto: ChangePasswordByTokenDto
+    ): Promise<string | Error> {
+        return this.usersService.changePasswordByToken(
+            changePasswordByTokenDto
+        );
+    }
 }

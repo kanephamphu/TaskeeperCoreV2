@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class NumberVerifyDto {
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
-    number: number;
+    readonly number: number;
 
     @IsString()
     @IsNotEmpty()

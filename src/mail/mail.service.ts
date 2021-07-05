@@ -24,7 +24,7 @@ export class MailService {
         });
     }
 
-    async sendForgotPasswordEmail(user: User) {
+    async sendForgotPasswordEmail(user: User): Promise<void> {
         const url = `${devServerURL}/auth/confirm?token=${user.verifyInformation.token}&id=${user._id}`;
 
         await this.mailerService.sendMail({

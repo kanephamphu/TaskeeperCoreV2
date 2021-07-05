@@ -1,6 +1,6 @@
 export enum CREATE_USER_MESSAGE {
     SUCCESS = "User account has been created successfully",
-    FAILED = "Error: Customer not created!",
+    FAILED = "Error: User not created!",
 }
 
 export enum USER_LOGIN_MESSAGE {
@@ -17,9 +17,10 @@ export enum COMMON_MESSAGE {
     BAD_REQUEST = "Error: Request not resolved",
     SUCCESS = "Handle successfully",
     FAILED = "Error: Not found!",
+    USER_NOTFOUND = "Error: User not found!",
 }
 
-export enum ErrorMessage {
+export enum ERROR_MESSAGE {
     TOKEN_EXPIRED = "Token is expired",
     NOT_FOUND = "Not found",
     WRONG_TOKEN = "Wrong token",

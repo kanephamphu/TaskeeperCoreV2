@@ -1,3 +1,4 @@
+import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 import { UsersService } from "users/users.service";
@@ -29,7 +30,7 @@ export default class AuthController {
             const token = req.query?.token;
             const userId = req.query?.id;
             if (token && userId) {
-                const verifyResult = await this.authService.verifyByToken(
+                const verifyResult = await this.authService.verifyAccountByToken(
                     token,
                     userId
                 );
@@ -48,10 +49,10 @@ export default class AuthController {
     }
 
     @Post("confirm")
-    @UsePipes()
+    @UsePipes(new ValidationPipe({ transform: true }))
     async confirmNumber(@Res() res, @Body() numberVerifyDto: NumberVerifyDto) {
         try {
-            const verifyResult = await this.authService.verifyByNumber(
+            const verifyResult = await this.authService.verifyAccountByNumber(
                 numberVerifyDto
             );
             if (verifyResult) {
@@ -92,7 +93,7 @@ export default class AuthController {
     }
 
     @Post("forgotpassword")
-    @UsePipes()
+    @UsePipes(new ValidationPipe({ transform: true }))
     public async forgotPassword(
         @Res() res,
         @Body() forgotPasswordDto: ForgotPasswordDto
@@ -104,12 +105,58 @@ export default class AuthController {
 
             res.status(HttpStatus.OK).json({
                 message: COMMON_MESSAGE.SUCCESS,
-                data: userId,
+                data: { userId },
             });
         } catch (error) {
-            res.status(HttpStatus.NOT_FOUND).json({
+            res.status(HttpStatus.BAD_REQUEST).json({
                 message: COMMON_MESSAGE.BAD_REQUEST,
-                error,
+                error: error.message,
+            });
+        }
+    }
+
+    @Post("checkverifynumber")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    public async checkVerifyNumber(
+        @Res() res,
+        @Body() numberVerifyDto: NumberVerifyDto
+    ) {
+        try {
+            const token = await this.authService.checkVerifyNumber(
+                numberVerifyDto
+            );
+
+            res.status(HttpStatus.OK).json({
+                message: COMMON_MESSAGE.SUCCESS,
+                data: { token },
+            });
+        } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.BAD_REQUEST,
+                error: error.message,
+            });
+        }
+    }
+
+    @Post("changepasswordbytoken")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    public async changePasswordByToken(
+        @Res() res,
+        @Body() changePasswordByTokenDto: ChangePasswordByTokenDto
+    ) {
+        try {
+            const userId = await this.authService.changePasswordByToken(
+                changePasswordByTokenDto
+            );
+
+            res.status(HttpStatus.OK).json({
+                message: COMMON_MESSAGE.SUCCESS,
+                data: { userId },
+            });
+        } catch (error) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.BAD_REQUEST,
+                error: error.message,
             });
         }
     }
