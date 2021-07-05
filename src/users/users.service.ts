@@ -147,14 +147,19 @@ export class UsersService {
     ): Promise<string | Error> {
         const forgotPasswordQuery = buildForgotPasswordQuery(forgotPasswordDto);
         const user = await this.userModel.findOne(forgotPasswordQuery);
+        const userId = user._id;
 
         if (user) {
             const verifyInformation = buildVerificationInformation(
                 VerificationType.FORGOT_PASSWORD
             );
-            user.verifyInformation.$set(verifyInformation);
-            await user.save();
-            this.mailService.sendForgotPasswordEmail(user);
+            await this.userModel.updateOne(
+                { _id: userId },
+                { verifyInformation }
+            );
+            const updatedUser = await this.userModel.findById(userId);
+
+            this.mailService.sendForgotPasswordEmail(updatedUser);
 
             return user._id;
         }
