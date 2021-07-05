@@ -45,38 +45,4 @@ export class AuthService {
             changePasswordByTokenDto
         );
     }
-
-    // async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
-    //     // find user in db
-    //     const user = await this.usersService.findByLogin(loginUserDto);
-
-    //     // generate and sign token
-    //     const token = this._createToken(user);
-
-    //     return {
-    //         loginString: user.loginString,
-    //         ...token,
-    //     };
-    // }
-
-    // async validateUser(payload: JwtPayload): Promise<UserDto> {
-    //     const user = await this.usersService.findByPayload(payload);
-    //     if (!user) {
-    //         throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED);
-    //     }
-
-    //     return user;
-    // }
-
-    // private _createToken({ loginString }: UserDto): any {
-    //     const expiresIn = process.env.EXPIRESIN;
-
-    //     const user: JwtPayload = { loginString };
-    //     const accessToken = this.jwtService.sign(user);
-
-    //     return {
-    //         expiresIn,
-    //         accessToken,
-    //     };
-    // }
 }
