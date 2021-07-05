@@ -49,7 +49,7 @@ export default class AuthController {
     }
 
     @Post("confirm")
-    @UsePipes()
+    @UsePipes(new ValidationPipe({ transform: true }))
     async confirmNumber(@Res() res, @Body() numberVerifyDto: NumberVerifyDto) {
         try {
             const verifyResult = await this.authService.verifyAccountByNumber(
@@ -93,7 +93,7 @@ export default class AuthController {
     }
 
     @Post("forgotpassword")
-    @UsePipes()
+    @UsePipes(new ValidationPipe({ transform: true }))
     public async forgotPassword(
         @Res() res,
         @Body() forgotPasswordDto: ForgotPasswordDto
@@ -105,7 +105,7 @@ export default class AuthController {
 
             res.status(HttpStatus.OK).json({
                 message: COMMON_MESSAGE.SUCCESS,
-                data: userId,
+                data: { userId },
             });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -116,7 +116,7 @@ export default class AuthController {
     }
 
     @Post("checkverifynumber")
-    @UsePipes()
+    @UsePipes(new ValidationPipe({ transform: true }))
     public async checkVerifyNumber(
         @Res() res,
         @Body() numberVerifyDto: NumberVerifyDto
@@ -128,7 +128,7 @@ export default class AuthController {
 
             res.status(HttpStatus.OK).json({
                 message: COMMON_MESSAGE.SUCCESS,
-                data: token,
+                data: { token },
             });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -139,7 +139,7 @@ export default class AuthController {
     }
 
     @Post("changepasswordbytoken")
-    @UsePipes()
+    @UsePipes(new ValidationPipe({ transform: true }))
     public async changePasswordByToken(
         @Res() res,
         @Body() changePasswordByTokenDto: ChangePasswordByTokenDto
@@ -151,7 +151,7 @@ export default class AuthController {
 
             res.status(HttpStatus.OK).json({
                 message: COMMON_MESSAGE.SUCCESS,
-                data: userId,
+                data: { userId },
             });
         } catch (error) {
             res.status(HttpStatus.BAD_REQUEST).json({
