@@ -1,3 +1,4 @@
+import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { MailService } from "mail/mail.service";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { AccountStatus } from "enums/user/user.enum";
@@ -21,6 +22,7 @@ import { JwtService } from "@nestjs/jwt";
 import { VerificationType } from "enums/user/user.enum";
 import { ERROR_MESSAGE, COMMON_MESSAGE } from "enums/message/message.enum";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
+import { truncate } from "fs/promises";
 
 @Injectable()
 export class UsersService {
@@ -191,6 +193,52 @@ export class UsersService {
             }
 
             throw new Error(ERROR_MESSAGE.NUMBER_EXPIRED);
+        }
+
+        throw new Error(COMMON_MESSAGE.USER_NOTFOUND);
+    }
+
+    public async changePasswordByToken(
+        changePasswordByTokenDto: ChangePasswordByTokenDto
+    ) {
+        const user = await this.userModel.findById(
+            changePasswordByTokenDto.userId
+        );
+
+        if (user) {
+            if (
+                compareDateTime(
+                    new Date(),
+                    user.verifyInformation.tokenTimeToLive,
+                    COMPARE_TYPE.SMALLER_OR_EQUAL
+                ) &&
+                user.verifyInformation.isUsed === false
+            ) {
+                if (
+                    user.verifyInformation.token ===
+                        changePasswordByTokenDto.token &&
+                    user.verifyInformation.verificationType ===
+                        VerificationType.FORGOT_PASSWORD
+                ) {
+                    const hashedPassword = await hashPassword(
+                        changePasswordByTokenDto.password
+                    );
+
+                    await this.userModel.updateOne(
+                        { _id: changePasswordByTokenDto.userId },
+                        {
+                            "loginInformation.password": hashedPassword,
+                            "verifyInformation.isUsed": true,
+                        }
+                    );
+
+                    return user._id;
+                }
+
+                throw new Error(ERROR_MESSAGE.WRONG_TOKEN);
+            }
+
+            throw new Error(ERROR_MESSAGE.TOKEN_EXPIRED);
         }
 
         throw new Error(COMMON_MESSAGE.USER_NOTFOUND);

@@ -1,3 +1,4 @@
+import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
@@ -35,6 +36,14 @@ export class AuthService {
         numberVerifyDto: NumberVerifyDto
     ): Promise<string | Error> {
         return this.usersService.checkVerifyNumber(numberVerifyDto);
+    }
+
+    changePasswordByToken(
+        changePasswordByTokenDto: ChangePasswordByTokenDto
+    ): Promise<string | Error> {
+        return this.usersService.changePasswordByToken(
+            changePasswordByTokenDto
+        );
     }
 
     // async login(loginUserDto: LoginUserDto): Promise<LoginStatus> {
