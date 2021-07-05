@@ -16,9 +16,7 @@ export const buildLoginQuery = (userLoginDto: UserLoginDto): any => {
     const normalLogin = {
         $or: [
             {
-                phoneNumber: {
-                    phoneNumber: userLoginDto.loginString,
-                },
+                "phoneNumber.phoneNumber": userLoginDto.loginString,
             },
             {
                 email: userLoginDto.loginString,
