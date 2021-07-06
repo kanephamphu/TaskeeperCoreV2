@@ -6,6 +6,7 @@ import { Gender, AccountStatus } from "enums/user/user.enum";
 import { LoginInformation } from "schemas/user/loginInformation.schema";
 import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 import { VerifyInformation } from "schemas/user/verifyInformation.schema";
+import { Permission } from "schemas/user/permission.schema";
 
 @Schema()
 export class User extends Document {
@@ -67,6 +68,9 @@ export class User extends Document {
 
     @Prop({ type: String, enum: LanguageCode })
     languageCode: string;
+
+    @Prop({ type: Permission })
+    permissions: Permission;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
