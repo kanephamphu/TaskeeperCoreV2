@@ -1,4 +1,4 @@
-import { CODE_TABLE } from "./../enums/codetable/cache.enum";
+import { CODE_TABLE } from "enums/codetable/cache.enum";
 import { codeTablesMapper } from "shared/mapper/codetable/codetable.mapper";
 import { CodeTableDto } from "dtos/codetable/codetable.dto";
 import { Injectable } from "@nestjs/common";
