@@ -43,6 +43,7 @@ export default class UserController {
                 const {
                     verifyInformation,
                     loginInformation,
+                    permissions,
                     ...data
                 } = user.toObject();
                 this.mailService.sendUserVerification(user);
