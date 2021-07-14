@@ -4,7 +4,10 @@ import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { AccountStatus } from "enums/user/user.enum";
 import { compareDateTime, COMPARE_TYPE } from "shared/utils/dateHelper";
 import { getLanguageCodeByISDCode } from "shared/utils/codeTableHelper";
-import { buildVerificationInformation } from "shared/querybuilder/verifyInformation.builder";
+import {
+    buildVerificationInformation,
+    buildInitialPermissions,
+} from "shared/querybuilder/verifyInformation.builder";
 import { buildJwtPayload } from "shared/utils/authHelper";
 import { hashPassword, comparePasswords } from "shared/utils/stringHelper";
 import {
@@ -22,7 +25,6 @@ import { JwtService } from "@nestjs/jwt";
 import { VerificationType } from "enums/user/user.enum";
 import { ERROR_MESSAGE, COMMON_MESSAGE } from "enums/message/message.enum";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
-import { truncate } from "fs/promises";
 
 @Injectable()
 export class UsersService {
@@ -43,8 +45,13 @@ export class UsersService {
         const languageCode = getLanguageCodeByISDCode(
             createUserDto.phoneNumber.ISD_CodeId
         );
+        const permissions = buildInitialPermissions();
         const createdUser = new this.userModel(
-            _.assign(createUserDto, { verifyInformation, languageCode })
+            _.assign(createUserDto, {
+                verifyInformation,
+                languageCode,
+                permissions,
+            })
         );
 
         return createdUser.save();
