@@ -25,7 +25,6 @@ import { JwtService } from "@nestjs/jwt";
 import { VerificationType } from "enums/user/user.enum";
 import { ERROR_MESSAGE, COMMON_MESSAGE } from "enums/message/message.enum";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
-import { truncate } from "fs/promises";
 
 @Injectable()
 export class UsersService {

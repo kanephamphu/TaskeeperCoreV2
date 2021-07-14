@@ -15,7 +15,7 @@ import {
 export class TagsController {
     constructor(private tagsService: TagsService) {}
 
-    @Post("searchTags")
+    @Post("search")
     @UsePipes(new ValidationPipe({ transform: true }))
     public async searchTagsLight(
         @Res() res,
@@ -25,11 +25,11 @@ export class TagsController {
             const tags = await this.tagsService.searchTags(searchTagsDto);
 
             if (tags) {
-                return res.status(HttpStatus.CREATED).json({ data: tags });
+                return res.status(HttpStatus.OK).json({ data: tags });
             }
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({
-                error,
+                error: error.message,
             });
         } finally {
             return res.status(HttpStatus.CREATED).json({});

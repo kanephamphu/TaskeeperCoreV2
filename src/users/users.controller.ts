@@ -43,7 +43,6 @@ export default class UserController {
                 const {
                     verifyInformation,
                     loginInformation,
-                    permissions,
                     ...data
                 } = user.toObject();
                 this.mailService.sendUserVerification(user);
@@ -52,6 +51,8 @@ export default class UserController {
                     .json({ message: CREATE_USER_MESSAGE.SUCCESS, data });
             }
         } catch (error) {
+            console.error(error);
+            //Todo: Error Handler
             return res.status(HttpStatus.BAD_REQUEST).json({
                 message: CREATE_USER_MESSAGE.FAILED,
                 error,

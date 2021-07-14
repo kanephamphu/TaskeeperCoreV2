@@ -1,29 +1,58 @@
-import { LanguageCode } from "enums/codetable/language.enum";
+import { SearchTags } from "enums/search/searchFields.enum";
 import {
-    IsBoolean,
+    SearchCommonDto,
+    SearchFilterDto,
+    SearchSortingDto,
+} from "dtos/common/searchCommon.dto";
+import {
+    IsArray,
     IsEnum,
-    IsNotEmpty,
-    IsNumber,
-    IsString,
-    Max,
-    Min,
+    IsObject,
+    IsOptional,
+    ValidateNested,
 } from "class-validator";
+import { Type } from "class-transformer";
 
-export class SearchTagsDto {
-    @IsString()
-    readonly searchString: string;
+class SearchTagsFieldsDto {
+    @IsObject()
+    @IsOptional()
+    "value.vi_VI": SearchFilterDto;
 
-    @IsBoolean()
-    @IsNotEmpty()
-    readonly searchPopular: boolean;
+    @IsObject()
+    @IsOptional()
+    "value.en_US": SearchFilterDto;
 
-    @IsNumber()
-    @Min(0)
-    @Max(100)
-    @IsNotEmpty()
-    readonly amount: number;
+    @IsObject()
+    @IsOptional()
+    usingTimes: SearchFilterDto;
+}
+class SearchTagsSortingDto extends SearchSortingDto {
+    @IsEnum(SearchTags)
+    field: SearchTags;
+}
 
-    @IsNotEmpty()
-    @IsEnum(LanguageCode)
-    readonly languageCode: LanguageCode;
+class SearchTagsFilter extends SearchTagsFieldsDto {
+    @IsArray()
+    @IsOptional()
+    @Type(() => SearchTagsFieldsDto)
+    and: SearchTagsFieldsDto[];
+
+    @IsArray()
+    @IsOptional()
+    @Type(() => SearchTagsFieldsDto)
+    or: SearchTagsFieldsDto[];
+}
+
+export class SearchTagsDto extends SearchCommonDto {
+    @IsObject()
+    @IsOptional()
+    @Type(() => SearchTagsFilter)
+    @ValidateNested()
+    filter: SearchTagsFilter;
+
+    @IsOptional()
+    @IsArray()
+    @Type(() => SearchTagsSortingDto)
+    @ValidateNested()
+    sorting: SearchTagsSortingDto[];
 }
