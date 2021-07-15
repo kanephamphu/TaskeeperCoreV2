@@ -3,6 +3,11 @@ export enum CREATE_USER_MESSAGE {
     FAILED = "Error: User not created!",
 }
 
+export enum SEARCH_TAGS {
+    SUCCESS = "Get successfully",
+    NOT_FOUND = "Error: No data found",
+}
+
 export enum USER_LOGIN_MESSAGE {
     SUCCESS = "User account has been logon successfully",
     FAILED = "Error: User not found!",
@@ -18,6 +23,7 @@ export enum COMMON_MESSAGE {
     SUCCESS = "Handle successfully",
     FAILED = "Error: Not found!",
     USER_NOTFOUND = "Error: User not found!",
+    INTERNAL_SERVER_ERROR = "Error: Internal error!",
 }
 
 export enum ERROR_MESSAGE {

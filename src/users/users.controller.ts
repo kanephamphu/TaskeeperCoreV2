@@ -9,8 +9,7 @@ import {
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
-import { JwtAuthGuard } from "auth/guards/jwt-auth.guard";
-import { CREATE_USER_MESSAGE } from "enums/message/message.enum";
+import { SEARCH_TAGS, COMMON_MESSAGE } from "enums/message/message.enum";
 import * as _ from "lodash";
 import { MailService } from "mail/mail.service";
 
@@ -20,18 +19,6 @@ export default class UserController {
         private usersService: UsersService,
         private mailService: MailService
     ) {}
-
-    // @UseGuards(JwtAuthGuard)
-    // @Get()
-    // findAll(@Query() query) {
-    //     //return this.usersService.findAll();
-    // }
-
-    // @UseGuards(JwtAuthGuard)
-    // @Get(":id")
-    // findOne(@Param("id") id: string) {
-    //     return id;
-    // }
 
     @Post("create")
     @UsePipes(new ValidationPipe({ transform: true }))
@@ -48,19 +35,19 @@ export default class UserController {
                 this.mailService.sendUserVerification(user);
                 return res
                     .status(HttpStatus.CREATED)
-                    .json({ message: CREATE_USER_MESSAGE.SUCCESS, data });
+                    .json({ message: SEARCH_TAGS.SUCCESS, data });
             }
         } catch (error) {
             console.error(error);
             //Todo: Error Handler
             return res.status(HttpStatus.BAD_REQUEST).json({
-                message: CREATE_USER_MESSAGE.FAILED,
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
                 error,
             });
         } finally {
             return res
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .json({ message: CREATE_USER_MESSAGE.FAILED });
+                .json({ message: SEARCH_TAGS.NOT_FOUND });
         }
     }
 }

@@ -32,7 +32,7 @@ export class TagsController {
                 error: error.message,
             });
         } finally {
-            return res.status(HttpStatus.CREATED).json({});
+            return res.status(HttpStatus.NOT_FOUND).json({});
         }
     }
 }
