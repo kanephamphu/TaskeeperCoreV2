@@ -1,5 +1,6 @@
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import UserLoginDto from "dtos/user/login.dto";
+import { AccountStatus } from "enums/user/user.enum";
 
 export const buildLoginQuery = (userLoginDto: UserLoginDto): any => {
     const facebookTokenLogin = {
@@ -42,5 +43,16 @@ export const buildForgotPasswordQuery = (
                 email: forgotPasswordDto.forgotPasswordString,
             },
         ],
+    };
+};
+
+export const firstTimeTagsQueryBuilder = (tagIds: string[]): Object => {
+    return {
+        accountStatus: AccountStatus.ACTIVE,
+        $push: {
+            tags: {
+                $each: tagIds,
+            },
+        },
     };
 };

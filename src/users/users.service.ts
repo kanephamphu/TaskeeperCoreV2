@@ -1,3 +1,4 @@
+import FirstTimeTagsDto from "dtos/user/firstTimeTags.dto";
 import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { MailService } from "mail/mail.service";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
@@ -13,10 +14,11 @@ import { hashPassword, comparePasswords } from "shared/utils/stringHelper";
 import {
     buildLoginQuery,
     buildForgotPasswordQuery,
+    firstTimeTagsQueryBuilder,
 } from "shared/querybuilder/userQuery.builder";
 import UserLoginDto from "dtos/user/login.dto";
 import { CreateUserDto } from "dtos/user/createUser.dto";
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import * as _ from "lodash";
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "schemas/user/user.schema";
@@ -25,12 +27,19 @@ import { JwtService } from "@nestjs/jwt";
 import { VerificationType } from "enums/user/user.enum";
 import { ERROR_MESSAGE, COMMON_MESSAGE } from "enums/message/message.enum";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
+import {
+    InjectQueryService,
+    QueryService,
+    GetByIdOptions,
+} from "@nestjs-query/core";
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(User.name)
         private readonly userModel: Model<User>,
+        @InjectQueryService(User)
+        private readonly usersQueryService: QueryService<User>,
         private jwtService: JwtService,
         private mailService: MailService
     ) {}
@@ -249,5 +258,47 @@ export class UsersService {
         }
 
         throw new Error(COMMON_MESSAGE.USER_NOTFOUND);
+    }
+
+    public async handleFirstTimeTags(
+        firstTimeTags: FirstTimeTagsDto
+    ): Promise<boolean | Error> {
+        const verifiedToken = this.jwtService.verify(firstTimeTags.accessToken);
+
+        if (verifiedToken) {
+            const user = await this.usersQueryService.getById(
+                verifiedToken._id
+            );
+
+            if (user && user.accountStatus === AccountStatus.FIRST_TIME) {
+                const updateQuery = firstTimeTagsQueryBuilder(
+                    firstTimeTags.tagIds
+                );
+
+                const result = await this.usersQueryService.updateOne(
+                    user._id,
+                    updateQuery
+                );
+
+                if (result) {
+                    return true;
+                }
+
+                throw new HttpException(
+                    COMMON_MESSAGE.FAILED,
+                    HttpStatus.NOT_IMPLEMENTED
+                );
+            }
+
+            throw new HttpException(
+                COMMON_MESSAGE.USER_NOTFOUND,
+                HttpStatus.NOT_FOUND
+            );
+        }
+
+        throw new HttpException(
+            COMMON_MESSAGE.UNAUTHORIZED,
+            HttpStatus.UNAUTHORIZED
+        );
     }
 }

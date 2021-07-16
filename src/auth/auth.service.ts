@@ -5,6 +5,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UsersService } from "users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { LoginStatus } from "auth/interfaces/login-status.interface";
+import PayLoad from "dtos/user/payload.dto";
 
 @Injectable()
 export class AuthService {
@@ -44,5 +45,10 @@ export class AuthService {
         return this.usersService.changePasswordByToken(
             changePasswordByTokenDto
         );
+    }
+
+    validateUser(payload: PayLoad): boolean {
+        debugger;
+        return true;
     }
 }

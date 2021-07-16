@@ -5,7 +5,8 @@ import { CaslModule } from "casl/casl.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { CodetableModule } from "codetable/codetable.module";
 import { MailModule } from "mail/mail.module";
-import { TagsModule } from './tags/tags.module';
+import { TagsModule } from "./tags/tags.module";
+import { ServicesModule } from "./services/services.module";
 
 @Module({
     imports: [

@@ -24,6 +24,7 @@ export enum COMMON_MESSAGE {
     FAILED = "Error: Not found!",
     USER_NOTFOUND = "Error: User not found!",
     INTERNAL_SERVER_ERROR = "Error: Internal error!",
+    UNAUTHORIZED = "Error: Unauthorized",
 }
 
 export enum ERROR_MESSAGE {
