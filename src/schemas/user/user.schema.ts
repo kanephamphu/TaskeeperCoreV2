@@ -54,6 +54,9 @@ export class User extends Document {
     })
     phoneNumber: PhoneNumber;
 
+    @Prop({ type: String })
+    avatar: string;
+
     @Prop({ type: String, required: true, unique: true })
     email: string;
 
@@ -75,7 +78,7 @@ export class User extends Document {
     permissions: Permissions;
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Tag" }])
-    tags!: Tag[];
+    tags: Tag[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
