@@ -1,3 +1,4 @@
+import { Tag } from "schemas/tag/tag.schema";
 import { LanguageCode } from "enums/codetable/language.enum";
 import { AccountType } from "enums/user/user.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
@@ -7,6 +8,7 @@ import { LoginInformation } from "schemas/user/loginInformation.schema";
 import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 import { VerifyInformation } from "schemas/user/verifyInformation.schema";
 import { Permissions } from "schemas/user/permission.schema";
+import { Schema as MongooseSchema } from "mongoose";
 
 @Schema()
 export class User extends Document {
@@ -52,6 +54,9 @@ export class User extends Document {
     })
     phoneNumber: PhoneNumber;
 
+    @Prop({ type: String })
+    avatar: string;
+
     @Prop({ type: String, required: true, unique: true })
     email: string;
 
@@ -71,6 +76,9 @@ export class User extends Document {
 
     @Prop({ require: true, default: new Permissions() })
     permissions: Permissions;
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Tag" }])
+    tags: Tag[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

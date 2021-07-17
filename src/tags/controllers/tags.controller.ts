@@ -1,4 +1,4 @@
-import { TagsService } from "tags/tags.service";
+import { TagsService } from "tags/services/tags.service";
 import { SearchTagsDto } from "dtos/tags/searchTag.dto";
 import {
     Body,
@@ -32,7 +32,7 @@ export class TagsController {
                 error: error.message,
             });
         } finally {
-            return res.status(HttpStatus.CREATED).json({});
+            return res.status(HttpStatus.NOT_FOUND).json({});
         }
     }
 }

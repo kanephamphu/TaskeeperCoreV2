@@ -1,9 +1,9 @@
 import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
-import { UsersService } from "users/users.service";
+import { UsersService } from "users/services/users.service";
 import { COMMON_MESSAGE, USER_LOGIN_MESSAGE } from "enums/message/message.enum";
-import { AuthService } from "auth/auth.service";
+import { AuthService } from "auth/services/auth.service";
 import {
     Controller,
     Post,

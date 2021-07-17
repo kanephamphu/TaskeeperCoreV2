@@ -5,3 +5,8 @@ export enum Action {
     UPDATE = "update",
     DELETE = "delete",
 }
+
+export enum Subject {
+    USER = "user",
+    POST = "post",
+}
