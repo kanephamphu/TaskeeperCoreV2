@@ -1,5 +1,5 @@
 import PayLoad from "dtos/user/payload.dto";
-import { AuthService } from "auth/auth.service";
+import { AuthService } from "auth/services/auth.service";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { Injectable, HttpException, HttpStatus } from "@nestjs/common";

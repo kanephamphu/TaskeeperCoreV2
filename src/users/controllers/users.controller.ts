@@ -1,7 +1,7 @@
 import { ErrorHandlerService } from "services/errorHandler.service";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "dtos/user/createUser.dto";
-import { UsersService } from "users/users.service";
+import { UsersService } from "users/services/users.service";
 import {
     Controller,
     Body,

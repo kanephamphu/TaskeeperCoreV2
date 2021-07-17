@@ -2,7 +2,7 @@ import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import { NumberVerifyDto } from "dtos/auth/numberVerify.dto";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { UsersService } from "users/users.service";
+import { UsersService } from "users/services/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { LoginStatus } from "auth/interfaces/login-status.interface";
 import PayLoad from "dtos/user/payload.dto";

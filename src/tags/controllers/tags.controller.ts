@@ -1,4 +1,4 @@
-import { TagsService } from "tags/tags.service";
+import { TagsService } from "tags/services/tags.service";
 import { SearchTagsDto } from "dtos/tags/searchTag.dto";
 import {
     Body,

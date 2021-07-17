@@ -1,7 +1,7 @@
 import { Tag, TagSchema } from "schemas/tag/tag.schema";
 import { Module } from "@nestjs/common";
-import { TagsController } from "tags/tags.controller";
-import { TagsService } from "tags/tags.service";
+import { TagsController } from "tags/controllers/tags.controller";
+import { TagsService } from "tags/services/tags.service";
 import { NestjsQueryMongooseModule } from "@nestjs-query/query-mongoose";
 
 @Module({
