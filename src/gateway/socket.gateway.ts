@@ -1,3 +1,6 @@
+import { GateWayEvent } from "enums/gateway/gateway.enum";
+import SearchTagByStringDto from "dtos/tags/searchTagByString.dto";
+import { TagsService } from "tags/services/tags.service";
 import {
     SubscribeMessage,
     WebSocketGateway,
@@ -6,12 +9,14 @@ import {
     OnGatewayConnection,
     OnGatewayDisconnect,
 } from "@nestjs/websockets";
-import { Logger } from "@nestjs/common";
+import { Logger, UsePipes, ValidationPipe } from "@nestjs/common";
 import { Socket, Server } from "socket.io";
 
 @WebSocketGateway()
 export class SocketGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+    constructor(private tagsService: TagsService) {}
+
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger("AppGateway");
 
@@ -20,9 +25,17 @@ export class SocketGateway
         this.server.emit("msgToClient", payload);
     }
 
+    @UsePipes(new ValidationPipe())
     @SubscribeMessage("clientSearchTags")
-    handleSearchTags(client: Socket, payload: string) {
-        return payload;
+    async handleSearchTags(
+        client: Socket,
+        searchTagByStringDto: SearchTagByStringDto
+    ) {
+        const tags = await this.tagsService.searchTagsByString(
+            searchTagByStringDto
+        );
+
+        return { event: GateWayEvent.SERVER_SEARCH_TAGS, data: tags };
     }
 
     afterInit(server: Server) {
