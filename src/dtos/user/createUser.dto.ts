@@ -67,7 +67,7 @@ export class CreateUserDto {
     readonly gender: string;
 
     @IsUrl()
-    readonly avatar: string;
+    readonly avatar?: string;
 
     @IsObject()
     @IsNotEmpty()
