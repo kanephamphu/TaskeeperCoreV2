@@ -31,10 +31,10 @@ export default class CodeTablesController {
         const cacheKey = `${CODE_TABLE}${languageCode}`;
         let isdCodeData = await this.cacheManager.get(cacheKey);
         if (!isdCodeData) {
-            const codeTableXml = `${this.rootCodeTableDir}/${languageCode}/${CodeTableDir.ISD_CODE}`;
+            const codeTableXmlDir = `${this.rootCodeTableDir}/${languageCode}/${CodeTableDir.ISD_CODE}`;
 
             const xmlISDData = await fs.readFileSync(
-                codeTableXml,
+                codeTableXmlDir,
                 EncodingType.UTF8
             );
 
@@ -59,10 +59,10 @@ export default class CodeTablesController {
         const cacheKey = `${CODE_TABLE}${languageCode}`;
         let isdCodeData = await this.cacheManager.get(cacheKey);
         if (!isdCodeData) {
-            const codeTableXml = `${this.rootCodeTableDir}/${languageCode}/${CodeTableDir.LANGUAGE_CODE}`;
+            const codeTableXmlDir = `${this.rootCodeTableDir}/${languageCode}/${CodeTableDir.LANGUAGE_CODE}`;
 
             const xmlISDData = await fs.readFileSync(
-                codeTableXml,
+                codeTableXmlDir,
                 EncodingType.UTF8
             );
 
@@ -77,6 +77,34 @@ export default class CodeTablesController {
         return res.status(HttpStatus.OK).json({
             message: CODE_TABLE_MESSAGE.SUCCESS,
             data: isdCodeData,
+        });
+    }
+
+    @Get("jobType")
+    async getJobType(@Res() res, @Query() req) {
+        const languageCode: LanguageCode =
+            req.languageCode || LanguageCode.US_ENG;
+        const cacheKey = `${CODE_TABLE}${languageCode}`;
+        let jobTypeData = await this.cacheManager.get(cacheKey);
+        if (!jobTypeData) {
+            const codeTableXmlDir = `${this.rootCodeTableDir}/${languageCode}/${CodeTableDir.JOB_TYPE_CODE}`;
+
+            const xmlJobTypeData = await fs.readFileSync(
+                codeTableXmlDir,
+                EncodingType.UTF8
+            );
+
+            jobTypeData = this.codeTableService.handleCodeTable(
+                xmlJobTypeData,
+                CODE_TABLE.JOB_TYPE_CODE
+            );
+
+            await this.cacheManager.set(cacheKey, jobTypeData);
+        }
+
+        return res.status(HttpStatus.OK).json({
+            message: CODE_TABLE_MESSAGE.SUCCESS,
+            data: jobTypeData,
         });
     }
 }
