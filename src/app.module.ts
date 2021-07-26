@@ -5,6 +5,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { CodetableModule } from "codetable/codetable.module";
 import { TagsModule } from "./tags/tags.module";
 import { PermissionsModule } from './permissions/permissions.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { PermissionsModule } from './permissions/permissions.module';
         AuthModule,
         TagsModule,
         PermissionsModule,
+        GatewayModule,
     ],
 })
 export class AppModule {}

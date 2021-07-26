@@ -12,5 +12,6 @@ import { NestjsQueryMongooseModule } from "@nestjs-query/query-mongoose";
     ],
     controllers: [TagsController],
     providers: [TagsService],
+    exports: [TagsService],
 })
 export class TagsModule {}

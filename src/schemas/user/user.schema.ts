@@ -26,7 +26,7 @@ export class User extends Document {
     @Prop({ type: Date, default: Date.now() })
     createdAt: Date;
 
-    @Prop()
+    @Prop({ type: Date, default: Date.now() })
     updatedAt: Date;
 
     @Prop({ type: Number, required: true })
@@ -79,6 +79,12 @@ export class User extends Document {
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Tag" }])
     tags: Tag[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
+    follower: User[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
+    following: User[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

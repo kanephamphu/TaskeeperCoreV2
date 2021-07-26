@@ -1,0 +1,17 @@
+<CodeData>
+   <JobTypeCode>
+      <CodeId>freelance</CodeId>
+      <CodeValue>Freelance</CodeValue>
+      <CodeDescription>Work as freelancer role</CodeDescription>
+   </JobTypeCode>
+   <JobTypeCode>
+      <CodeId>fulltime</CodeId>
+      <CodeValue>Full-time</CodeValue>
+      <CodeDescription>Work as full-time worker</CodeDescription>
+   </JobTypeCode>
+   <JobTypeCode>
+      <CodeId>parttime</CodeId>
+      <CodeValue>Part-time</CodeValue>
+      <CodeDescription>Work as part-time worker</CodeDescription>
+   </JobTypeCode>
+</CodeData>
