@@ -11,6 +11,7 @@ import {
     MinLength,
     IsObject,
     IsUrl,
+    IsOptional,
 } from "class-validator";
 import { LoginInformation } from "dtos/user/loginInformation.dto";
 
@@ -67,6 +68,7 @@ export class CreateUserDto {
     readonly gender: string;
 
     @IsUrl()
+    @IsOptional()
     readonly avatar?: string;
 
     @IsObject()
