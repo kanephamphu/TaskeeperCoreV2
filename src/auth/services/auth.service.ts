@@ -48,7 +48,6 @@ export class AuthService {
     }
 
     validateUser(payload: PayLoad): boolean {
-        debugger;
         return true;
     }
 }

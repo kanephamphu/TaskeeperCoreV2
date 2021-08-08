@@ -12,6 +12,7 @@ import {
     ValidationPipe,
     UseGuards,
     HttpException,
+    UseInterceptors,
 } from "@nestjs/common";
 import { SEARCH_TAGS, COMMON_MESSAGE } from "enums/message/message.enum";
 import * as _ from "lodash";
@@ -81,4 +82,8 @@ export default class UserController {
             );
         }
     }
+
+    @Post("avatar")
+    @UseInterceptors()
+    async uploadAvatar() {}
 }
