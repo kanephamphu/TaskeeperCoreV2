@@ -20,9 +20,14 @@ export enum AccountType {
 export enum VerificationType {
     REGISTER = "register",
     SEND_MONEY = "sendMoney",
-    RESET_PASSWORD = "resetPassword",
+    FORGOT_PASSWORD = "forgotPassword",
 }
 
 export enum BcryptSaltRounds {
     PASSWORD = 10,
+}
+
+export enum VerifyNumberRange {
+    MIN = 1000,
+    MAX = 9999,
 }

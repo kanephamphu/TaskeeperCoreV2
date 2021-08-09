@@ -3,7 +3,7 @@ import { CacheModule, Module } from "@nestjs/common";
 import CodeTablesController from "codetable/codetable.controller";
 
 @Module({
-    imports: [CacheModule.register({ ttl: 30 })],
+    imports: [CacheModule.register({ ttl: 300 })],
     controllers: [CodeTablesController],
     providers: [CodeTablesService],
 })

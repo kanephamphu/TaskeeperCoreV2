@@ -1,3 +1,4 @@
+import { Tag } from "schemas/tag/tag.schema";
 import { LanguageCode } from "enums/codetable/language.enum";
 import { AccountType } from "enums/user/user.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
@@ -6,6 +7,8 @@ import { Gender, AccountStatus } from "enums/user/user.enum";
 import { LoginInformation } from "schemas/user/loginInformation.schema";
 import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 import { VerifyInformation } from "schemas/user/verifyInformation.schema";
+import { Permissions } from "schemas/user/permission.schema";
+import { Schema as MongooseSchema } from "mongoose";
 
 @Schema()
 export class User extends Document {
@@ -23,7 +26,7 @@ export class User extends Document {
     @Prop({ type: Date, default: Date.now() })
     createdAt: Date;
 
-    @Prop()
+    @Prop({ type: Date, default: Date.now() })
     updatedAt: Date;
 
     @Prop({ type: Number, required: true })
@@ -51,6 +54,9 @@ export class User extends Document {
     })
     phoneNumber: PhoneNumber;
 
+    @Prop({ type: String })
+    avatar: string;
+
     @Prop({ type: String, required: true, unique: true })
     email: string;
 
@@ -67,6 +73,18 @@ export class User extends Document {
 
     @Prop({ type: String, enum: LanguageCode })
     languageCode: string;
+
+    @Prop({ require: true, default: new Permissions() })
+    permissions: Permissions;
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Tag" }])
+    tags: Tag[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
+    follower: User[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
+    following: User[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

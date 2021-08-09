@@ -10,6 +10,8 @@ import {
     IsPositive,
     MinLength,
     IsObject,
+    IsUrl,
+    IsOptional,
 } from "class-validator";
 import { LoginInformation } from "dtos/user/loginInformation.dto";
 
@@ -64,6 +66,10 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsEnum(Gender)
     readonly gender: string;
+
+    @IsUrl()
+    @IsOptional()
+    readonly avatar?: string;
 
     @IsObject()
     @IsNotEmpty()

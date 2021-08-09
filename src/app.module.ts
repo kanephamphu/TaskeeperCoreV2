@@ -1,10 +1,11 @@
 import { UsersModule } from "users/users.module";
 import { AuthModule } from "auth/auth.module";
 import { Module } from "@nestjs/common";
-import { CaslModule } from "./casl/casl.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { CodetableModule } from "codetable/codetable.module";
-import { MailModule } from "./mail/mail.module";
+import { TagsModule } from "./tags/tags.module";
+import { PermissionsModule } from './permissions/permissions.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
     imports: [
@@ -14,6 +15,9 @@ import { MailModule } from "./mail/mail.module";
         ),
         CodetableModule,
         AuthModule,
+        TagsModule,
+        PermissionsModule,
+        GatewayModule,
     ],
 })
 export class AppModule {}

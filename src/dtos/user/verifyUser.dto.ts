@@ -9,7 +9,10 @@ export default class VerifyInformationDto {
     verifyNumber: number;
 
     @IsDate()
-    timeToLive: Date;
+    tokenTimeToLive: Date;
+
+    @IsDate()
+    numberTimeToLive: Date;
 
     @IsString()
     @IsEnum(VerificationType)

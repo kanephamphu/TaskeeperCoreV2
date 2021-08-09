@@ -1,0 +1,17 @@
+<CodeData>
+   <JobTypeCode>
+      <CodeId>freelance</CodeId>
+      <CodeValue>Công việc tự do</CodeValue>
+      <CodeDescription>Làm công việc tự do</CodeDescription>
+   </JobTypeCode>
+   <JobTypeCode>
+      <CodeId>fulltime</CodeId>
+      <CodeValue>Toàn thời gian</CodeValue>
+      <CodeDescription>Làm công việc toàn thời gian</CodeDescription>
+   </JobTypeCode>
+   <JobTypeCode>
+      <CodeId>parttime</CodeId>
+      <CodeValue>Bán thời gian</CodeValue>
+      <CodeDescription>Làm công việc bán thời gian</CodeDescription>
+   </JobTypeCode>
+</CodeData>
