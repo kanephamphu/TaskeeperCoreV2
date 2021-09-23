@@ -6,6 +6,7 @@ import { CodetableModule } from "codetable/codetable.module";
 import { TagsModule } from "./tags/tags.module";
 import { PermissionsModule } from './permissions/permissions.module';
 import { GatewayModule } from './gateway/gateway.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { GatewayModule } from './gateway/gateway.module';
         TagsModule,
         PermissionsModule,
         GatewayModule,
+        PostsModule,
     ],
 })
 export class AppModule {}

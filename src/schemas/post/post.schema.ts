@@ -32,6 +32,18 @@ export class Post extends Document {
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
     spectator: User[];
+
+    @Prop([{ type: String }])
+    tags: string[];
+
+    @Prop([{ type: String }])
+    skills: string[];
+
+    @Prop([{ type: String }])
+    industries: string[];
+
+    @Prop([{ type: String }])
+    images: string[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -20,6 +20,7 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
+        "@aginix/nestjs-gcloud-storage": "^1.2.0",
         "@casl/ability": "^5.3.1",
         "@nestjs-modules/mailer": "^1.6.0",
         "@nestjs-query/core": "^0.27.0",
