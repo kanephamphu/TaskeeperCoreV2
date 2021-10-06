@@ -33,4 +33,5 @@ export enum ERROR_MESSAGE {
     WRONG_TOKEN = "Wrong token",
     NUMBER_EXPIRED = "Number is expired",
     WRONG_NUMBER = "Wrong number",
+    NO_PERMISSION = "No permission to access this object",
 }
