@@ -1,4 +1,4 @@
-export const checkEditAuthorizationQueryBuilder = (userId, postId): Object => {
+export const checkPostOwnerQueryBuilder = (userId, postId): Object => {
     return {
         owner: {
             $in: [userId],

@@ -44,6 +44,9 @@ export class Post extends Document {
 
     @Prop([{ type: String }])
     images: string[];
+
+    @Prop([{ type: Boolean }])
+    disabled: boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
