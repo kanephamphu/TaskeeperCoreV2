@@ -1,5 +1,7 @@
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as _ from "lodash";
+@Injectable()
 export class JwtHandlerService {
     constructor(private jwtService: JwtService) {}
 

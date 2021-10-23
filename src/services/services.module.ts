@@ -1,11 +1,12 @@
 import { Module } from "@nestjs/common";
 import { ErrorHandlerService } from "services/errorHandler.service";
 import { JwtHandlerService } from "services/jwtHandler.service";
-import { JwtModule, JwtService } from "@nestjs/jwt";
+import { JwtModule } from "@nestjs/jwt";
+import { jwtConstants } from "auth/auth.constants";
 @Module({
     imports: [
         JwtModule.register({
-            secret: `${process.env.JWT_KEY}`,
+            secret: jwtConstants.access_token,
         }),
     ],
     providers: [ErrorHandlerService, JwtHandlerService],

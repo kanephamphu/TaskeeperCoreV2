@@ -3,11 +3,10 @@ import { AuthModule } from "auth/auth.module";
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { CodetableModule } from "codetable/codetable.module";
-import { TagsModule } from "./tags/tags.module";
-import { PermissionsModule } from './permissions/permissions.module';
-import { GatewayModule } from './gateway/gateway.module';
-import { PostsModule } from './posts/posts.module';
-
+import { TagsModule } from "tags/tags.module";
+import { PermissionsModule } from "permissions/permissions.module";
+import { GatewayModule } from "gateway/gateway.module";
+import { PostsModule } from "posts/posts.module";
 @Module({
     imports: [
         UsersModule,
