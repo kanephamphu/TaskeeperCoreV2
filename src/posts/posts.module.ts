@@ -1,3 +1,4 @@
+import { UsersService } from "users/services/users.service";
 import { PermissionsModule } from "permissions/permissions.module";
 import { PostSchema, Post } from "schemas/post/post.schema";
 import { Module } from "@nestjs/common";

@@ -260,6 +260,26 @@ export class UsersService {
         throw new Error(COMMON_MESSAGE.USER_NOTFOUND);
     }
 
+    public checkUsersExisting(userIds: string[]): boolean {
+        const users = _.map(userIds, (userId) =>
+            this.usersQueryService.getById(userId)
+        );
+        const userResults = Promise.all(users);
+        const existingUsersSize = _.chain(userResults)
+            .filter(
+                (userResult: User) =>
+                    userResult.accountStatus === AccountStatus.ACTIVE
+            )
+            .size()
+            .value();
+
+        if (existingUsersSize === _.size(userIds)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public async handleFirstTimeTags(
         firstTimeTags: FirstTimeTagsDto
     ): Promise<boolean | Error> {

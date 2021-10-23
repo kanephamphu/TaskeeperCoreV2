@@ -1,4 +1,3 @@
-import { PermissionsService } from "permissions/services/permissions.service";
 import { JwtHandlerService } from "services/jwtHandler.service";
 import { PostsService } from "posts/services/posts.service";
 import { NewPostDto } from "dtos/posts/newPost.dto";
@@ -24,8 +23,7 @@ import { EditPostDto } from "dtos/posts/post.dto";
 export class PostsController {
     constructor(
         private postsService: PostsService,
-        private jwtHandlerService: JwtHandlerService,
-        private permissionsService: PermissionsService
+        private jwtHandlerService: JwtHandlerService
     ) {}
 
     @Post("addNewPost")
