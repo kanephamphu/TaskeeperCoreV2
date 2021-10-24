@@ -1,8 +1,8 @@
 import { User } from "schemas/user/user.schema";
 import { JobType } from "enums/post/post.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
-import { Schema as MongooseSchema } from "mongoose";
+import { Document, Schema as MongooseSchema } from "mongoose";
+import { Candidate } from "schemas/post/canidate.schema";
 
 @Schema()
 export class Post extends Document {
@@ -47,6 +47,9 @@ export class Post extends Document {
 
     @Prop([{ type: Boolean }])
     disabled: boolean;
+
+    @Prop([{ type: Candidate }])
+    candidates: Candidate[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

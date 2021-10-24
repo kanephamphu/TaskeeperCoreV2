@@ -7,6 +7,7 @@ import { NestjsQueryMongooseModule } from "@nestjs-query/query-mongoose";
 import { GCloudStorageModule } from "@aginix/nestjs-gcloud-storage";
 import { PostsController } from "posts/controllers/posts.controller";
 import { ServicesModule } from "services/services.module";
+import { PostsManageController } from "posts/controllers/postsManage.controller";
 
 @Module({
     imports: [
@@ -21,6 +22,6 @@ import { ServicesModule } from "services/services.module";
         PermissionsModule,
     ],
     providers: [PostsService],
-    controllers: [PostsController],
+    controllers: [PostsController, PostsManageController],
 })
 export class PostsModule {}

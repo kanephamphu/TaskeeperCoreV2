@@ -42,9 +42,10 @@ export class PostsController {
             }
         } catch (error) {
             console.error(error);
-            return res
-                .status(HttpStatus.CREATED)
-                .json({ message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR, error });
+            return res.status(HttpStatus.CREATED).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error: error.message,
+            });
         }
     }
 
@@ -67,9 +68,10 @@ export class PostsController {
                 .status(HttpStatus.NOT_FOUND)
                 .json({ message: COMMON_MESSAGE.FAILED });
         } catch (error) {
-            return res
-                .status(HttpStatus.BAD_REQUEST)
-                .json({ message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR, error });
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error: error.message,
+            });
         }
     }
 
@@ -84,9 +86,9 @@ export class PostsController {
             const userId = this.jwtHandlerService.getUserIdFromJwt(
                 req.headers.authorization
             );
-            const post = await this.postsService.getPost(
-                userId,
-                deletePost.postId
+            const post = await this.postsService.deletePost(
+                deletePost._id,
+                userId
             );
 
             if (post) {
@@ -101,7 +103,7 @@ export class PostsController {
         } catch (error) {
             return res
                 .status(HttpStatus.BAD_REQUEST)
-                .json({ message: COMMON_MESSAGE.FAILED, error });
+                .json({ message: COMMON_MESSAGE.FAILED, error: error.message });
         }
     }
 
@@ -131,9 +133,10 @@ export class PostsController {
                 .status(HttpStatus.NOT_FOUND)
                 .json({ message: COMMON_MESSAGE.BAD_REQUEST });
         } catch (error) {
-            return res
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .json({ message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR, error });
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error: error.message,
+            });
         }
     }
 }

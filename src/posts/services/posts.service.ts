@@ -27,7 +27,7 @@ export class PostsService {
             );
 
         if (readPermissionChecked) {
-            const postData = await this.postsQueryService.getById(postId);
+            const postData = await this.postsQueryService.findById(postId);
 
             if (postData && !postData.disabled) {
                 return postData;
@@ -43,7 +43,20 @@ export class PostsService {
         newPostDto: NewPostDto,
         userId: string
     ): Promise<Error | Post> {
-        const newPost = _.assign(newPostDto, { userId });
+        const createPermissionChecked =
+            await this.permissionsService.checkPermission(
+                userId,
+                Subject.POST,
+                Action.CREATE,
+                AccountType.NORMAL_USER
+            );
+        if (!createPermissionChecked) {
+            throw new Error(ERROR_MESSAGE.NO_PERMISSION);
+        }
+        const newPost = _.assign(newPostDto, {
+            userId,
+            owner: [{ _id: userId }],
+        });
         const createdPost = await this.postsQueryService.createOne(newPost);
 
         if (createdPost) {
@@ -77,8 +90,10 @@ export class PostsService {
         );
 
         if (isHasPermission) {
+            const editedPostId = editedPost._id;
+            delete editedPost._id;
             const updatedPost = await this.postsQueryService.updateOne(
-                editedPost._id,
+                editedPostId,
                 editedPost
             );
 
@@ -100,7 +115,6 @@ export class PostsService {
                 Action.UPDATE,
                 AccountType.NORMAL_USER
             );
-
         const postAuthentication = this.checkPostOwnerPermission(
             userId,
             deletedPostId

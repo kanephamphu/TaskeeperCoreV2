@@ -14,7 +14,7 @@ import { AddNewOwnersDto } from "dtos/posts/addNewOwners.dto";
 import { COMMON_MESSAGE } from "enums/message/message.enum";
 
 @Controller("postsManage")
-export class PostsController {
+export class PostsManageController {
     constructor(
         private jwtHandlerService: JwtHandlerService,
         private postsManageService: PostsManageService
