@@ -48,7 +48,7 @@ export class Post extends Document {
     @Prop([{ type: Boolean }])
     disabled: boolean;
 
-    @Prop([{ type: Candidate }])
+    @Prop([{}])
     candidates: Candidate[];
 }
 

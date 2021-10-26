@@ -1,4 +1,4 @@
-import { UsersService } from "users/services/users.service";
+import { UsersModule } from "users/users.module";
 import { PermissionsModule } from "permissions/permissions.module";
 import { PostSchema, Post } from "schemas/post/post.schema";
 import { Module } from "@nestjs/common";
@@ -8,6 +8,7 @@ import { GCloudStorageModule } from "@aginix/nestjs-gcloud-storage";
 import { PostsController } from "posts/controllers/posts.controller";
 import { ServicesModule } from "services/services.module";
 import { PostsManageController } from "posts/controllers/postsManage.controller";
+import { PostsManageService } from "./services/postsManage.service";
 
 @Module({
     imports: [
@@ -19,9 +20,10 @@ import { PostsManageController } from "posts/controllers/postsManage.controller"
             storageBaseUri: "taskeeperstorage",
         }),
         ServicesModule,
+        UsersModule,
         PermissionsModule,
     ],
-    providers: [PostsService],
+    providers: [PostsService, PostsManageService],
     controllers: [PostsController, PostsManageController],
 })
 export class PostsModule {}
