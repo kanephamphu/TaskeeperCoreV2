@@ -5,6 +5,7 @@ import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { User } from "schemas/user/user.schema";
 import { Connection, Model } from "mongoose";
 import { InjectQueryService, QueryService } from "@nestjs-query/core";
+import UserRatingDto from "dtos/user/userRating.dto";
 
 @Injectable()
 export class UserRelationshipService {
@@ -53,5 +54,35 @@ export class UserRelationshipService {
         } finally {
             transaction.endSession();
         }
+    }
+
+    async voteUser(userId: string, userRatingDto: UserRatingDto) {
+        const isExisting = await this.checkRatingExisting(
+            userId,
+            userRatingDto.targetUserId
+        );
+
+        if (isExisting) {
+        }
+    }
+
+    private async addNewRating(userId: string, userRatingDto: UserRatingDto) {}
+
+    private async updateRating(userId: string, userRatingDto: UserRatingDto) {}
+
+    private async checkRatingExisting(
+        userId: string,
+        targetUserId: string
+    ): Promise<Boolean | Error> {
+        const existingRating = await this.userModel.findOne({
+            _id: targetUserId,
+            "userRating.user": userId,
+        });
+
+        if (existingRating) {
+            return true;
+        }
+
+        return false;
     }
 }

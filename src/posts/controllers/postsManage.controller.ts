@@ -13,6 +13,7 @@ import {
 import { AddNewOwnersDto } from "dtos/posts/addNewOwners.dto";
 import { COMMON_MESSAGE } from "enums/message/message.enum";
 import { ApplyJobDto } from "dtos/posts/applyJob.dto";
+import { ClosePostDto } from "dtos/posts/closeJob.dto";
 import { ApproveCandidateDto } from "dtos/posts/approveCandidate";
 import * as _ from "lodash";
 
@@ -89,6 +90,47 @@ export class PostsManageController {
             const userId = this.jwtHandlerService.getUserIdFromJwt(
                 _.get(req.headers, "authorization")
             );
+            const approvedJob = await this.postsManageService.approveCandidate(
+                approveCandidate,
+                userId
+            );
+
+            if (approvedJob) {
+                return res.status(HttpStatus.ACCEPTED).json({
+                    message: COMMON_MESSAGE.SUCCESS,
+                    data: approvedJob,
+                });
+            }
+
+            return res.status(HttpStatus.BAD_GATEWAY).json({
+                message: COMMON_MESSAGE.FAILED,
+            });
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.BAD_REQUEST,
+                error: error.message,
+            });
+        }
+    }
+
+    @Post("closeJob")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async closeJob(@Res() res, @Body() closePostDto: ClosePostDto, @Req() req) {
+        try {
+            const userId = this.jwtHandlerService.getUserIdFromJwt(
+                _.get(req.headers, "authorization")
+            );
+            const closedJob = await this.postsManageService.closeJob(
+                closePostDto.postId,
+                userId
+            );
+
+            if (closedJob) {
+                return res.status(HttpStatus.ACCEPTED).json({
+                    message: COMMON_MESSAGE.SUCCESS,
+                    data: closedJob,
+                });
+            }
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({
                 message: COMMON_MESSAGE.BAD_REQUEST,

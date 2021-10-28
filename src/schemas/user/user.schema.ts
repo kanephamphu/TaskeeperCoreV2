@@ -1,3 +1,4 @@
+import { UserRating } from "schemas/user/userRating.schema";
 import { Tag } from "schemas/tag/tag.schema";
 import { LanguageCode } from "enums/codetable/language.enum";
 import { AccountType } from "enums/user/user.enum";
@@ -79,6 +80,9 @@ export class User extends Document {
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Tag" }])
     tags: Tag[];
+
+    @Prop()
+    userRating: UserRating[];
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
     follower: User[];

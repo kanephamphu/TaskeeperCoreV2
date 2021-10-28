@@ -12,6 +12,9 @@ export class Post extends Document {
     @Prop({ type: String, required: true })
     description: string;
 
+    @Prop({ type: String })
+    requirement: string;
+
     @Prop({ type: Date, default: Date.now() })
     createdAt: Date;
 
@@ -20,6 +23,12 @@ export class Post extends Document {
 
     @Prop({ type: String, enum: JobType })
     jobType: JobType;
+
+    @Prop({ type: Date })
+    expiredDate: Date;
+
+    @Prop({ type: Boolean })
+    isClosed: boolean;
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: "User" })
     author: User;
@@ -41,6 +50,9 @@ export class Post extends Document {
 
     @Prop([{ type: String }])
     industries: string[];
+
+    @Prop([{ type: String }])
+    positions: string[];
 
     @Prop([{ type: String }])
     images: string[];

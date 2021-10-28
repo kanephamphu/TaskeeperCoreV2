@@ -59,9 +59,10 @@ export class PostsManageService {
         );
 
         if (isHasPermission) {
-            const checkUserExisting = await this.usersService.checkUsersExisting(
-                addNewOwnersDto.ownerIds
-            );
+            const checkUserExisting =
+                await this.usersService.checkUsersExisting(
+                    addNewOwnersDto.ownerIds
+                );
 
             if (checkUserExisting) {
                 const post = await this.postsQueryService.getById(
@@ -92,21 +93,23 @@ export class PostsManageService {
     }
 
     async applyJob(applyJobDto: ApplyJobDto, applierId: string) {
-        const postOwnerAuthentication = await this.postService.checkPostOwnerPermission(
-            applierId,
-            applyJobDto.postId
-        );
+        const postOwnerAuthentication =
+            await this.postService.checkPostOwnerPermission(
+                applierId,
+                applyJobDto.postId
+            );
 
         if (postOwnerAuthentication) {
             throw new Error(POST_ERROR_MESSAGE.POST_OWNER);
         }
 
-        const readPostPermission = await this.permissionsService.checkPermission(
-            applierId,
-            Subject.POST,
-            Action.READ,
-            AccountType.NORMAL_USER
-        );
+        const readPostPermission =
+            await this.permissionsService.checkPermission(
+                applierId,
+                Subject.POST,
+                Action.READ,
+                AccountType.NORMAL_USER
+            );
 
         if (!readPostPermission) {
             throw new Error(ERROR_MESSAGE.NO_PERMISSION);
@@ -116,7 +119,7 @@ export class PostsManageService {
             checkAlreadyApplyQueryBuilder(applierId, applyJobDto.postId)
         );
 
-        if (isAlreadyApplied) {
+        if (!_.isEmpty(isAlreadyApplied)) {
             throw new Error(POST_ERROR_MESSAGE.ALREADY_APPLY);
         }
 
@@ -188,6 +191,41 @@ export class PostsManageService {
                     },
                 }
             );
+
+            if (updatedPost) {
+                return updatedPost;
+            }
+
+            throw new Error(COMMON_MESSAGE.BAD_REQUEST);
+        }
+
+        throw new Error(ERROR_MESSAGE.NO_PERMISSION);
+    }
+
+    async closeJob(postId: string, ownerId: string) {
+        const updatePermissionChecked = this.permissionsService.checkPermission(
+            ownerId,
+            Subject.POST,
+            Action.UPDATE,
+            AccountType.NORMAL_USER
+        );
+        const postAuthentication = this.postService.checkPostOwnerPermission(
+            ownerId,
+            postId
+        );
+        const checkedResults = await Promise.all([
+            updatePermissionChecked,
+            postAuthentication,
+        ]);
+        const isHasPermission = _.every(
+            checkedResults,
+            (checkedResult) => checkedResult
+        );
+
+        if (isHasPermission) {
+            const updatedPost = await this.postsQueryService.updateOne(postId, {
+                isClosed: true,
+            });
 
             if (updatedPost) {
                 return updatedPost;

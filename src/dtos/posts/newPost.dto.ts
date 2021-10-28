@@ -1,5 +1,5 @@
 import { JobType } from "enums/post/post.enum";
-import { IsArray, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsDate, IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class NewPostDto {
     @IsString()
@@ -9,6 +9,9 @@ export class NewPostDto {
     @IsString()
     @IsNotEmpty()
     description: string;
+
+    @IsString()
+    requirement: string;
 
     @IsString()
     @IsEnum(JobType)
@@ -21,5 +24,11 @@ export class NewPostDto {
     industries: string[];
 
     @IsArray()
+    positions: string[];
+
+    @IsArray()
     skills: string[];
+
+    @IsDate()
+    expiredDate: Date;
 }
