@@ -1,3 +1,4 @@
+import { UserRelationshipService } from "users/services/userRelationship.service";
 import { ServicesModule } from "services/services.module";
 import { UserSchema, User } from "schemas/user/user.schema";
 // import { usersProviders } from "users/users.providers";
@@ -24,7 +25,7 @@ import { NestjsQueryMongooseModule } from "@nestjs-query/query-mongoose";
         ServicesModule,
     ],
     controllers: [UserController],
-    providers: [UsersService, JwtAuthGuard],
-    exports: [UsersService],
+    providers: [UsersService, JwtAuthGuard, UserRelationshipService],
+    exports: [UsersService, UserRelationshipService],
 })
 export class UsersModule {}

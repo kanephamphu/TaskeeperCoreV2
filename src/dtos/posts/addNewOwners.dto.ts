@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsNotEmpty, IsString } from "class-validator";
 
-export default class FirstTimeTagsDto {
+export class AddNewOwnersDto {
     @IsString()
-    @ApiProperty()
     @IsNotEmpty()
-    accessToken: string;
+    @ApiProperty()
+    postId: string;
 
     @IsArray()
-    @ApiProperty()
     @IsNotEmpty()
-    tagIds: string[];
+    @ApiProperty()
+    ownerIds: string[];
 }

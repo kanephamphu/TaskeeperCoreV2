@@ -1,4 +1,5 @@
 import { SortDirection } from "@nestjs-query/core";
+import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
     IsDefined,
@@ -18,12 +19,14 @@ class SearchPagingDto {
     @IsNumber()
     @Min(0)
     @Max(10)
+    @ApiProperty()
     @IsNotEmpty()
     limit: number;
 
     @IsNumber()
     @Min(0)
     @Max(10)
+    @ApiProperty()
     @IsNotEmpty()
     offset: number;
 }
@@ -31,6 +34,7 @@ class SearchPagingDto {
 export class SearchCommonDto {
     @IsNotEmptyObject()
     @IsObject()
+    @ApiProperty()
     @Type(() => SearchPagingDto)
     @ValidateNested()
     paging: SearchPagingDto;
@@ -38,35 +42,43 @@ export class SearchCommonDto {
 
 export class SearchSortingDto {
     @IsEnum(SortDirection)
+    @ApiProperty()
     direction: SortDirection;
 }
 
 export class SearchFilterDto {
     @MinLength(0)
+    @ApiProperty()
     @MaxLength(100)
     is: any;
 
     @MinLength(0)
+    @ApiProperty()
     @MaxLength(100)
     isNot: any;
 
     @MinLength(0)
+    @ApiProperty()
     @MaxLength(100)
     gt: any;
 
     @MinLength(0)
+    @ApiProperty()
     @MaxLength(100)
     gte: any;
 
     @MinLength(0)
+    @ApiProperty()
     @MaxLength(100)
     le: any;
 
     @MinLength(0)
+    @ApiProperty()
     @MaxLength(100)
     lte: any;
 
     @MinLength(0)
+    @ApiProperty()
     @MaxLength(100)
     iLike: any;
 }

@@ -1,6 +1,6 @@
 import { Permissions } from "schemas/user/permission.schema";
 import VerifyInformationDto from "dtos/user/verifyUser.dto";
-import { VerificationType } from "enums/user/user.enum";
+import { VerificationType, VerifyNumberRange } from "enums/user/user.enum";
 import { addDays, addMinutes } from "shared/utils/dateHelper";
 import * as Str from "@supercharge/strings";
 import { CommonPermission } from "schemas/user/commonPermission.schema";
@@ -11,7 +11,9 @@ export const buildVerificationInformation = (
     const verificationInformationDto = new VerifyInformationDto();
     verificationInformationDto.token = Str.random();
     verificationInformationDto.verifyNumber =
-        1000 + Math.floor(Math.random() * 10000);
+        Math.floor(
+            Math.random() * (VerifyNumberRange.MAX - VerifyNumberRange.MIN + 1)
+        ) + VerifyNumberRange.MIN;
     verificationInformationDto.tokenTimeToLive = addDays(new Date(), 1);
     verificationInformationDto.numberTimeToLive = addMinutes(new Date(), 2);
     verificationInformationDto.verificationType = verificationType;

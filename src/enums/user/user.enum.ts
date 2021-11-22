@@ -26,3 +26,8 @@ export enum VerificationType {
 export enum BcryptSaltRounds {
     PASSWORD = 10,
 }
+
+export enum VerifyNumberRange {
+    MIN = 1000,
+    MAX = 9999,
+}
