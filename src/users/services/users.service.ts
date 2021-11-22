@@ -32,6 +32,12 @@ import {
     QueryService,
     GetByIdOptions,
 } from "@nestjs-query/core";
+import {
+    getNewsFeedPostQueryBuilder,
+    getWallPostQueryBuilder,
+} from "shared/querybuilder/postQuery.builder";
+import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
+import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 
 @Injectable()
 export class UsersService {
@@ -320,5 +326,38 @@ export class UsersService {
             COMMON_MESSAGE.UNAUTHORIZED,
             HttpStatus.UNAUTHORIZED
         );
+    }
+
+    public async getWallPostIds(
+        getWallPostDto: GetWallPostDto
+    ): Promise<string[]> {
+        const buildGetWallQuery: Object =
+            getWallPostQueryBuilder(getWallPostDto);
+
+        const userWall = await this.userModel.findOne(buildGetWallQuery);
+
+        if (userWall) {
+            return _.map(userWall.wallFeed, "_id");
+        }
+
+        return [];
+    }
+
+    public async getNewsFeedPostIds(
+        getNewsFeedPostDto: GetNewsFeedPostDto,
+        userId: string
+    ): Promise<string[]> {
+        const getNewsFeedPostQuery: Object = getNewsFeedPostQueryBuilder(
+            getNewsFeedPostDto,
+            userId
+        );
+
+        const newsFeed = await this.userModel.findOne(getNewsFeedPostQuery);
+
+        if (newsFeed) {
+            return _.map(newsFeed.newsFeed, "_id");
+        }
+
+        return [];
     }
 }

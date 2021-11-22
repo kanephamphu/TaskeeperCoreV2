@@ -1,3 +1,7 @@
+import { UsersService } from "./../../users/services/users.service";
+import { User } from "schemas/user/user.schema";
+import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
+import { UserRelationshipService } from "users/services/userRelationship.service";
 import { COMMON_MESSAGE, ERROR_MESSAGE } from "enums/message/message.enum";
 import { EditPostDto } from "dtos/posts/post.dto";
 import { NewPostDto } from "dtos/posts/newPost.dto";
@@ -5,17 +9,27 @@ import { Post } from "schemas/post/post.schema";
 import { InjectQueryService, QueryService } from "@nestjs-query/core";
 import { Injectable } from "@nestjs/common";
 import * as _ from "lodash";
-import { checkPostOwnerQueryBuilder } from "shared/querybuilder/postQuery.builder";
+import {
+    checkPostOwnerQueryBuilder,
+    getWallPostQueryBuilder,
+} from "shared/querybuilder/postQuery.builder";
 import { PermissionsService } from "permissions/services/permissions.service";
 import { Action, Subject } from "enums/auth/auth.enum";
 import { AccountType } from "enums/user/user.enum";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 
 @Injectable()
 export class PostsService {
     constructor(
         @InjectQueryService(Post)
         private readonly postsQueryService: QueryService<Post>,
-        private permissionsService: PermissionsService
+        @InjectModel(Post.name)
+        private readonly postModel: Model<Post>,
+        private permissionsService: PermissionsService,
+        private userRelationshipService: UserRelationshipService,
+        private usersService: UsersService
     ) {}
 
     async getPost(userId, postId) {
@@ -60,6 +74,12 @@ export class PostsService {
         const createdPost = await this.postsQueryService.createOne(newPost);
 
         if (createdPost) {
+            this.userRelationshipService.addFollowersNewsFeed(
+                userId,
+                createdPost._id
+            );
+            this.userRelationshipService.addUserWall(userId, createdPost._id);
+
             return createdPost;
         }
 
@@ -160,5 +180,25 @@ export class PostsService {
         }
 
         return false;
+    }
+
+    async getWallPosts(
+        getWallPostDto: GetWallPostDto
+    ): Promise<Error | Post[]> {
+        const postIds = await this.usersService.getWallPostIds(getWallPostDto);
+
+        return this.postModel.find({ _id: { $in: postIds } });
+    }
+
+    async getNewsFeedPosts(
+        getNewsFeedDto: GetNewsFeedPostDto,
+        userId: string
+    ): Promise<Error | Post[]> {
+        const postIds = await this.usersService.getNewsFeedPostIds(
+            getNewsFeedDto,
+            userId
+        );
+
+        return this.postModel.find({ _id: { $in: postIds } });
     }
 }

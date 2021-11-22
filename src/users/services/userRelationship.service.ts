@@ -66,6 +66,26 @@ export class UserRelationshipService {
         }
     }
 
+    async addUserWall(userId: string, postId): Promise<void | Error> {
+        this.userModel.updateOne(
+            { _id: userId },
+            { $push: { wall: { _id: postId } } }
+        );
+    }
+
+    async addFollowersNewsFeed(userId: string, postId): Promise<void | Error> {
+        const user = await this.userModel.findById(userId);
+        const followerIds = _.map(
+            user.follower,
+            (followerData) => followerData._id
+        );
+
+        this.userModel.updateMany(
+            { _id: { $in: followerIds } },
+            { $push: { newsFeed: { _id: postId } } }
+        );
+    }
+
     private async addNewRating(userId: string, userRatingDto: UserRatingDto) {}
 
     private async updateRating(userId: string, userRatingDto: UserRatingDto) {}

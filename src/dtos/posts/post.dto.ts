@@ -7,11 +7,9 @@ export class EditPostDto {
     _id: string;
 
     @IsString()
-    @IsNotEmpty()
     title: string;
 
     @IsString()
-    @IsNotEmpty()
     description: string;
 
     @IsString()

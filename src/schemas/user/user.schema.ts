@@ -10,6 +10,7 @@ import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 import { VerifyInformation } from "schemas/user/verifyInformation.schema";
 import { Permissions } from "schemas/user/permission.schema";
 import { Schema as MongooseSchema } from "mongoose";
+import { Post } from "schemas/post/post.schema";
 
 @Schema()
 export class User extends Document {
@@ -89,6 +90,12 @@ export class User extends Document {
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
     following: User[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Post" }])
+    newsFeed: Post[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Post" }])
+    wallFeed: Post[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

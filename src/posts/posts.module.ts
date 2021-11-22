@@ -9,12 +9,14 @@ import { PostsController } from "posts/controllers/posts.controller";
 import { ServicesModule } from "services/services.module";
 import { PostsManageController } from "posts/controllers/postsManage.controller";
 import { PostsManageService } from "./services/postsManage.service";
+import { MongooseModule } from "@nestjs/mongoose";
 
 @Module({
     imports: [
         NestjsQueryMongooseModule.forFeature([
             { document: Post, name: Post.name, schema: PostSchema },
         ]),
+        MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
         GCloudStorageModule.withConfig({
             defaultBucketname: "taskeeperstorage",
             storageBaseUri: "taskeeperstorage",

@@ -18,6 +18,8 @@ import {
 import { Post } from "@nestjs/common";
 import { COMMON_MESSAGE } from "enums/message/message.enum";
 import { EditPostDto } from "dtos/posts/post.dto";
+import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
+import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 
 @Controller("posts")
 export class PostsController {
@@ -60,7 +62,7 @@ export class PostsController {
 
             if (post) {
                 return res
-                    .status(HttpStatus.CREATED)
+                    .status(HttpStatus.OK)
                     .json({ message: COMMON_MESSAGE.SUCCESS, data: post });
             }
 
@@ -134,6 +136,60 @@ export class PostsController {
                 .json({ message: COMMON_MESSAGE.BAD_REQUEST });
         } catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error: error.message,
+            });
+        }
+    }
+
+    @Post("getWall")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async getWall(
+        @Res() res,
+        @Body() getWallPostDto: GetWallPostDto,
+        @Req() req
+    ) {
+        try {
+            const wallPosts = await this.postsService.getWallPosts(
+                getWallPostDto
+            );
+
+            if (wallPosts) {
+                return res
+                    .status(HttpStatus.FOUND)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: wallPosts });
+            }
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error: error.message,
+            });
+        }
+    }
+
+    @Post("getNewsFeed")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async getNewsFeed(
+        @Res() res,
+        @Body() getNewsFeedDto: GetNewsFeedPostDto,
+        @Req() req
+    ) {
+        try {
+            const userId = this.jwtHandlerService.getUserIdFromJwt(
+                req.headers.authorization
+            );
+            const newsFeed = await this.postsService.getNewsFeedPosts(
+                getNewsFeedDto,
+                userId
+            );
+
+            if (newsFeed) {
+                return res
+                    .status(HttpStatus.FOUND)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: newsFeed });
+            }
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({
                 message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
                 error: error.message,
             });
