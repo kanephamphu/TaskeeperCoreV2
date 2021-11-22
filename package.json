@@ -32,7 +32,7 @@
         "@nestjs/mongoose": "^7.2.4",
         "@nestjs/passport": "^7.1.5",
         "@nestjs/platform-express": "^7.6.15",
-        "@nestjs/platform-socket.io": "^8.0.4",
+        "@nestjs/platform-socket.io": "^8.2.2",
         "@nestjs/swagger": "^4.8.2",
         "@nestjs/websockets": "^8.0.4",
         "@supercharge/strings": "^1.18.0",

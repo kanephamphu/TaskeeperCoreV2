@@ -10,6 +10,15 @@ async function bootstrap() {
         .setDescription("The Taskeeper API")
         .setVersion("1.0")
         .addTag("taskeeper")
+        .addBearerAuth(
+            {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT",
+                in: "header",
+            },
+            "access-token"
+        )
         .build();
     const document = SwaggerModule.createDocument(app, config);
 
