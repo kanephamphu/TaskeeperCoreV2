@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import {
     IsNotEmpty,
     IsNotEmptyObject,
@@ -8,10 +9,12 @@ import { LoginInformation } from "dtos/user/loginInformation.dto";
 
 export default class UserLoginDto {
     @IsObject()
+    @ApiProperty()
     @IsNotEmptyObject()
     loginInformation: LoginInformation;
 
     @IsString()
+    @ApiProperty()
     @IsNotEmpty()
     loginString: string;
 }

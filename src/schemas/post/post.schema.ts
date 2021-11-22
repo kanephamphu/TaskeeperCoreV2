@@ -62,6 +62,9 @@ export class Post extends Document {
 
     @Prop([{}])
     candidates: Candidate[];
+
+    @Prop({ type: Number, default: 0 })
+    impressions: number;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
