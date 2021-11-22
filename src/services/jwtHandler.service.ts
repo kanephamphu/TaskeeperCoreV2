@@ -13,6 +13,6 @@ export class JwtHandlerService {
             _id: string;
         };
 
-        return jwtInfo._id;
+        return jwtInfo?._id;
     }
 }
