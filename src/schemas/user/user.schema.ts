@@ -1,3 +1,4 @@
+import { UserRating } from "schemas/user/userRating.schema";
 import { Tag } from "schemas/tag/tag.schema";
 import { LanguageCode } from "enums/codetable/language.enum";
 import { AccountType } from "enums/user/user.enum";
@@ -9,6 +10,7 @@ import { PhoneNumber } from "schemas/user/phoneNumber.schema";
 import { VerifyInformation } from "schemas/user/verifyInformation.schema";
 import { Permissions } from "schemas/user/permission.schema";
 import { Schema as MongooseSchema } from "mongoose";
+import { Post } from "schemas/post/post.schema";
 
 @Schema()
 export class User extends Document {
@@ -80,11 +82,20 @@ export class User extends Document {
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Tag" }])
     tags: Tag[];
 
+    @Prop()
+    userRating: UserRating[];
+
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
     follower: User[];
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "User" }])
     following: User[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Post" }])
+    newsFeed: Post[];
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: "Post" }])
+    wallFeed: Post[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

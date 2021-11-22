@@ -32,6 +32,12 @@ import {
     QueryService,
     GetByIdOptions,
 } from "@nestjs-query/core";
+import {
+    getNewsFeedPostQueryBuilder,
+    getWallPostQueryBuilder,
+} from "shared/querybuilder/postQuery.builder";
+import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
+import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 
 @Injectable()
 export class UsersService {
@@ -260,6 +266,26 @@ export class UsersService {
         throw new Error(COMMON_MESSAGE.USER_NOTFOUND);
     }
 
+    public checkUsersExisting(userIds: string[]): boolean {
+        const users = _.map(userIds, (userId) =>
+            this.usersQueryService.getById(userId)
+        );
+        const userResults = Promise.all(users);
+        const existingUsersSize = _.chain(userResults)
+            .filter(
+                (userResult: User) =>
+                    userResult.accountStatus === AccountStatus.ACTIVE
+            )
+            .size()
+            .value();
+
+        if (existingUsersSize === _.size(userIds)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public async handleFirstTimeTags(
         firstTimeTags: FirstTimeTagsDto
     ): Promise<boolean | Error> {
@@ -300,5 +326,38 @@ export class UsersService {
             COMMON_MESSAGE.UNAUTHORIZED,
             HttpStatus.UNAUTHORIZED
         );
+    }
+
+    public async getWallPostIds(
+        getWallPostDto: GetWallPostDto
+    ): Promise<string[]> {
+        const buildGetWallQuery: Object =
+            getWallPostQueryBuilder(getWallPostDto);
+
+        const userWall = await this.userModel.findOne(buildGetWallQuery);
+
+        if (userWall) {
+            return _.map(userWall.wallFeed, "_id");
+        }
+
+        return [];
+    }
+
+    public async getNewsFeedPostIds(
+        getNewsFeedPostDto: GetNewsFeedPostDto,
+        userId: string
+    ): Promise<string[]> {
+        const getNewsFeedPostQuery: Object = getNewsFeedPostQueryBuilder(
+            getNewsFeedPostDto,
+            userId
+        );
+
+        const newsFeed = await this.userModel.findOne(getNewsFeedPostQuery);
+
+        if (newsFeed) {
+            return _.map(newsFeed.newsFeed, "_id");
+        }
+
+        return [];
     }
 }

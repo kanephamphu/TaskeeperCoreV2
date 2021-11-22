@@ -1,18 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class CodeTableDto {
+export class ApplyJobDto {
     @IsString()
-    @IsNotEmpty()
     @ApiProperty()
-    codeId: string;
-
-    @IsString()
     @IsNotEmpty()
-    @ApiProperty()
-    codeValue: string;
+    postId: string;
 
     @IsString()
     @ApiProperty()
-    codeDescription: string;
+    summaryMessage: string;
 }

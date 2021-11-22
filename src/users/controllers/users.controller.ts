@@ -1,5 +1,4 @@
 import { ErrorHandlerService } from "services/errorHandler.service";
-import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "dtos/user/createUser.dto";
 import { UsersService } from "users/services/users.service";
 import {
@@ -34,11 +33,8 @@ export default class UserController {
             const user = await this.usersService.create(createUserDto);
 
             if (user) {
-                const {
-                    verifyInformation,
-                    loginInformation,
-                    ...data
-                } = user.toObject();
+                const { verifyInformation, loginInformation, ...data } =
+                    user.toObject();
                 this.mailService.sendUserVerification(user);
                 return res
                     .status(HttpStatus.CREATED)
@@ -74,9 +70,8 @@ export default class UserController {
                 });
             }
         } catch (error) {
-            const errorHandled: HttpException = this.errorHandlerService.handleError(
-                error
-            );
+            const errorHandled: HttpException =
+                this.errorHandlerService.handleError(error);
             res.status(errorHandled.getStatus()).json(
                 errorHandled.getResponse()
             );

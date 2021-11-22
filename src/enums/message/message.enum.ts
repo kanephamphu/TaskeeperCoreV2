@@ -33,4 +33,10 @@ export enum ERROR_MESSAGE {
     WRONG_TOKEN = "Wrong token",
     NUMBER_EXPIRED = "Number is expired",
     WRONG_NUMBER = "Wrong number",
+    NO_PERMISSION = "No permission to access this object",
+}
+
+export enum POST_ERROR_MESSAGE {
+    POST_OWNER = "You are post owner, so that you have no permission to apply your job",
+    ALREADY_APPLY = "Your have already applied to this job",
 }
