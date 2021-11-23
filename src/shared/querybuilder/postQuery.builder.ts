@@ -40,7 +40,6 @@ export const getWallPostQueryBuilder = (
     getWallPostDto: GetWallPostDto
 ): Object => {
     return {
-        _id: getWallPostDto.userId,
         wallFeed: {
             $slice: [getWallPostDto.offset, getWallPostDto.limit],
         },
@@ -48,11 +47,9 @@ export const getWallPostQueryBuilder = (
 };
 
 export const getNewsFeedPostQueryBuilder = (
-    getWallPostDto: GetNewsFeedPostDto,
-    userId: string
+    getWallPostDto: GetNewsFeedPostDto
 ): Object => {
     return {
-        _id: userId,
         newsFeed: {
             $slice: [getWallPostDto.offset, getWallPostDto.limit],
         },
