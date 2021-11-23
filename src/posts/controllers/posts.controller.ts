@@ -20,6 +20,7 @@ import { COMMON_MESSAGE } from "enums/message/message.enum";
 import { EditPostDto } from "dtos/posts/post.dto";
 import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
 import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("posts")
 export class PostsController {
@@ -168,6 +169,7 @@ export class PostsController {
     }
 
     @Post("getNewsFeed")
+    @ApiBearerAuth()
     @UsePipes(new ValidationPipe({ transform: true }))
     async getNewsFeed(
         @Res() res,
