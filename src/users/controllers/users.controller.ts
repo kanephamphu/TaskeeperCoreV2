@@ -12,6 +12,9 @@ import {
     UseGuards,
     HttpException,
     UseInterceptors,
+    Get,
+    Query,
+    Req,
 } from "@nestjs/common";
 import { SEARCH_TAGS, COMMON_MESSAGE } from "enums/message/message.enum";
 import * as _ from "lodash";
@@ -39,6 +42,38 @@ export default class UserController {
                 return res
                     .status(HttpStatus.CREATED)
                     .json({ message: SEARCH_TAGS.SUCCESS, data });
+            }
+        } catch (error) {
+            console.error(error);
+            //Todo: Error Handler
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error,
+            });
+        } finally {
+            return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: SEARCH_TAGS.NOT_FOUND });
+        }
+    }
+
+    @Get("getUser")
+    public async get(@Req() req, @Res() res, @Query() query) {
+        try {
+            const userId: string = query.userId;
+
+            if (!userId) {
+                return res
+                    .status(HttpStatus.BAD_REQUEST)
+                    .json({ message: COMMON_MESSAGE.BAD_REQUEST });
+            }
+
+            const user = await this.usersService.getUser(userId);
+
+            if (user) {
+                return res
+                    .status(HttpStatus.FOUND)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: user });
             }
         } catch (error) {
             console.error(error);
