@@ -1,5 +1,13 @@
-import { JobType } from "enums/post/post.enum";
-import { IsArray, IsDate, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { JobType, SalaryType } from "enums/post/post.enum";
+import {
+    IsArray,
+    IsDate,
+    IsEnum,
+    IsNotEmpty,
+    IsNumber,
+    IsString,
+    Min,
+} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class NewPostDto {
@@ -41,4 +49,34 @@ export class NewPostDto {
     @IsDate()
     @ApiProperty()
     expiredDate: Date;
+
+    @IsEnum(SalaryType)
+    @ApiProperty()
+    salaryType: SalaryType;
+
+    @IsNumber()
+    @Min(0)
+    @ApiProperty()
+    minSalary: number;
+
+    @IsNumber()
+    @Min(0)
+    @ApiProperty()
+    maxSalary: number;
+
+    @IsString()
+    @ApiProperty()
+    location: string;
+
+    @IsString()
+    @ApiProperty()
+    responsibilities: string;
+
+    @IsString()
+    @ApiProperty()
+    experience: string;
+
+    @IsString()
+    @ApiProperty()
+    benefits: string;
 }
