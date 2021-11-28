@@ -115,7 +115,7 @@ export class PostsController {
         try {
             const postId = query.postId;
 
-            if (!!postId) {
+            if (!postId) {
                 return res
                     .status(HttpStatus.BAD_REQUEST)
                     .json({ message: COMMON_MESSAGE.BAD_REQUEST });
