@@ -331,10 +331,14 @@ export class UsersService {
     public async getWallPostIds(
         getWallPostDto: GetWallPostDto
     ): Promise<string[]> {
-        const buildGetWallQuery: Object =
-            getWallPostQueryBuilder(getWallPostDto);
+        const buildGetWallQuery: Object = getWallPostQueryBuilder(
+            getWallPostDto
+        );
 
-        const userWall = await this.userModel.findOne(buildGetWallQuery);
+        const userWall = await this.userModel.findOne(
+            { _id: getWallPostDto.userId },
+            buildGetWallQuery
+        );
 
         if (userWall) {
             return _.map(userWall.wallFeed, "_id");
@@ -348,11 +352,13 @@ export class UsersService {
         userId: string
     ): Promise<string[]> {
         const getNewsFeedPostQuery: Object = getNewsFeedPostQueryBuilder(
-            getNewsFeedPostDto,
-            userId
+            getNewsFeedPostDto
         );
 
-        const newsFeed = await this.userModel.findOne(getNewsFeedPostQuery);
+        const newsFeed = await this.userModel.findOne(
+            { _id: userId },
+            getNewsFeedPostQuery
+        );
 
         if (newsFeed) {
             return _.map(newsFeed.newsFeed, "_id");
