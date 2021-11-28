@@ -10,3 +10,8 @@ export enum CandidateStatus {
     CHARGED = "charged",
     CANCELED = "canceled",
 }
+
+export enum SalaryType {
+    RANGE = "Range",
+    DEALING = "Dealing",
+}

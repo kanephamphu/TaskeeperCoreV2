@@ -331,9 +331,8 @@ export class UsersService {
     public async getWallPostIds(
         getWallPostDto: GetWallPostDto
     ): Promise<string[]> {
-        const buildGetWallQuery: Object = getWallPostQueryBuilder(
-            getWallPostDto
-        );
+        const buildGetWallQuery: Object =
+            getWallPostQueryBuilder(getWallPostDto);
 
         const userWall = await this.userModel.findOne(
             { _id: getWallPostDto.userId },
@@ -351,9 +350,8 @@ export class UsersService {
         getNewsFeedPostDto: GetNewsFeedPostDto,
         userId: string
     ): Promise<string[]> {
-        const getNewsFeedPostQuery: Object = getNewsFeedPostQueryBuilder(
-            getNewsFeedPostDto
-        );
+        const getNewsFeedPostQuery: Object =
+            getNewsFeedPostQueryBuilder(getNewsFeedPostDto);
 
         const newsFeed = await this.userModel.findOne(
             { _id: userId },
@@ -365,5 +363,9 @@ export class UsersService {
         }
 
         return [];
+    }
+
+    public async getUser(userId: string): Promise<User> {
+        return this.usersQueryService.findById(userId);
     }
 }
