@@ -16,7 +16,7 @@ import {
     ValidationPipe,
 } from "@nestjs/common";
 import { Post } from "@nestjs/common";
-import { COMMON_MESSAGE } from "enums/message/message.enum";
+import { COMMON_MESSAGE, ERROR_MESSAGE } from "enums/message/message.enum";
 import { EditPostDto } from "dtos/posts/post.dto";
 import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
 import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
@@ -136,6 +136,13 @@ export class PostsController {
                 .status(HttpStatus.NOT_FOUND)
                 .json({ message: COMMON_MESSAGE.BAD_REQUEST });
         } catch (error) {
+            if (error.message === ERROR_MESSAGE.NO_PERMISSION) {
+                return res.status(HttpStatus.FORBIDDEN).json({
+                    message: ERROR_MESSAGE.NO_PERMISSION,
+                    error: error.message,
+                });
+            }
+
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
                 error: error.message,
