@@ -43,7 +43,7 @@ export class PostsService {
         if (readPermissionChecked) {
             const postData = await this.postsQueryService.findById(postId);
 
-            if (postData && !postData.disabled) {
+            if (postData && !postData.disabled[0]) {
                 return postData;
             }
 
