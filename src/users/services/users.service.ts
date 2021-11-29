@@ -202,6 +202,10 @@ export class UsersService {
         throw new Error(COMMON_MESSAGE.FAILED);
     }
 
+    public async getUser(userId: string) {
+        return this.usersQueryService.findById(userId);
+    }
+
     public async checkVerifyNumber(
         numberVerifyDto: NumberVerifyDto
     ): Promise<string | Error> {

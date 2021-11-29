@@ -1,3 +1,4 @@
+import { SalaryType } from "./../../enums/post/post.enum";
 import { User } from "schemas/user/user.schema";
 import { JobType } from "enums/post/post.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
@@ -65,6 +66,27 @@ export class Post extends Document {
 
     @Prop({ type: Number, default: 0 })
     impressions: number;
+
+    @Prop({ type: String })
+    benefits: string;
+
+    @Prop({ type: String })
+    experience: string;
+
+    @Prop({ type: String })
+    responsibilities: string;
+
+    @Prop({ type: String })
+    location: string;
+
+    @Prop({ type: SalaryType })
+    salaryType: SalaryType;
+
+    @Prop({ type: Number })
+    minSalary: number;
+
+    @Prop({ type: Number })
+    maxSalary: number;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
