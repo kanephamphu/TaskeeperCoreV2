@@ -7,11 +7,14 @@ import {
     Controller,
     Delete,
     Get,
+    HttpException,
     HttpStatus,
     Put,
     Query,
     Req,
     Res,
+    UploadedFile,
+    UseInterceptors,
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
@@ -21,9 +24,12 @@ import { EditPostDto } from "dtos/posts/post.dto";
 import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
 import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { UploadImageDto } from "dtos/posts/uploadImage.dto";
 
 @Controller("posts")
 export class PostsController {
+    errorHandlerService: any;
     constructor(
         private postsService: PostsService,
         private jwtHandlerService: JwtHandlerService
@@ -202,6 +208,46 @@ export class PostsController {
                 message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
                 error: error.message,
             });
+        }
+    }
+
+    @Post("images")
+    @UseInterceptors(FileInterceptor("file"))
+    async uploadImage(
+        @UploadedFile() file: Express.Multer.File,
+        @Req() req,
+        @Res() res,
+        @Body() uploadImageDto: UploadImageDto
+    ) {
+        try {
+            const userId = this.jwtHandlerService.getUserIdFromJwt(
+                req.headers.authorization
+            );
+
+            if (!userId) {
+                return res
+                    .status(HttpStatus.NOT_FOUND)
+                    .json({ message: COMMON_MESSAGE.FAILED });
+            }
+
+            const data = await this.postsService.saveImage(
+                file,
+                userId,
+                uploadImageDto.postId
+            );
+
+            if (data) {
+                return res
+                    .status(HttpStatus.OK)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: data });
+            }
+        } catch (err) {
+            const errorHandled: HttpException =
+                this.errorHandlerService.handleError(err);
+
+            res.status(errorHandled.getStatus()).json(
+                errorHandled.getResponse()
+            );
         }
     }
 }

@@ -19,9 +19,20 @@ import { AccountType } from "enums/user/user.enum";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
+import { FILE_LOCATION, MimeType } from "enums/common/type.enum";
+import { uuid } from "@supercharge/strings/dist";
+import * as AWS from "aws-sdk";
 
 @Injectable()
 export class PostsService {
+    AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || "taskeeper1";
+    s3 = new AWS.S3({
+        accessKeyId: process.env.AWS_S3_ACCESS_KEY || "AKIASLXTCDRPPYKRNU76",
+        secretAccessKey:
+            process.env.AWS_S3_KEY_SECRET ||
+            "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",
+    });
+
     constructor(
         @InjectQueryService(Post)
         private readonly postsQueryService: QueryService<Post>,
@@ -200,5 +211,84 @@ export class PostsService {
         );
 
         return this.postModel.find({ _id: { $in: postIds } });
+    }
+
+    public async saveImage(file: Express.Multer.File, userId: string, postId) {
+        if (
+            file.mimetype === MimeType.JPEG ||
+            file.mimetype === MimeType.BMP ||
+            file.mimetype === MimeType.PNG ||
+            file.mimetype === MimeType.TIFF
+        ) {
+            const updatePermissionChecked =
+                this.permissionsService.checkPermission(
+                    userId,
+                    Subject.POST,
+                    Action.UPDATE,
+                    AccountType.NORMAL_USER
+                );
+            const postAuthentication = this.checkPostOwnerPermission(
+                userId,
+                postId
+            );
+            const checkedResults = await Promise.all([
+                updatePermissionChecked,
+                postAuthentication,
+            ]);
+            const isHasPermission = _.every(
+                checkedResults,
+                (checkedResult) => checkedResult
+            );
+
+            if (isHasPermission) {
+                file.filename = `${uuid()}.${file.mimetype.split("/")[1]}`;
+                const url = await this.uploadFile(file);
+                const userData = await this.postsQueryService.updateOne(
+                    postId,
+                    {
+                        images: [url],
+                    }
+                );
+
+                return userData;
+            }
+
+            throw new Error(ERROR_MESSAGE.NO_PERMISSION);
+        }
+
+        throw new Error(ERROR_MESSAGE.WRONG_TYPE_FILE);
+    }
+
+    uploadFile(file) {
+        const { filename } = file;
+
+        return this.s3_upload(
+            file.buffer,
+            this.AWS_S3_BUCKET,
+            filename,
+            file.mimetype
+        );
+    }
+
+    async s3_upload(file, bucket, name, mimetype) {
+        const params = {
+            Bucket: bucket,
+            Key: String(name),
+            Body: file,
+            ACL: "public-read",
+            ContentType: mimetype,
+            ContentDisposition: "inline",
+            CreateBucketConfiguration: {
+                LocationConstraint: "us-east-2",
+            },
+        };
+
+        try {
+            let s3Response = await this.s3.upload(params).promise();
+
+            return s3Response.Location;
+        } catch (e) {
+            console.log(e);
+        }
     }
 }

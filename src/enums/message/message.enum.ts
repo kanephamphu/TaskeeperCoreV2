@@ -34,6 +34,7 @@ export enum ERROR_MESSAGE {
     NUMBER_EXPIRED = "Number is expired",
     WRONG_NUMBER = "Wrong number",
     NO_PERMISSION = "No permission to access this object",
+    WRONG_TYPE_FILE = "Wrong file type",
 }
 
 export enum POST_ERROR_MESSAGE {
