@@ -38,9 +38,20 @@ import {
 } from "shared/querybuilder/postQuery.builder";
 import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
 import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
+import { FILE_LOCATION, MimeType } from "enums/common/type.enum";
+import { uuid } from "@supercharge/strings/dist";
+import * as AWS from "aws-sdk";
 
 @Injectable()
 export class UsersService {
+    AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || "taskeeper1";
+    s3 = new AWS.S3({
+        accessKeyId: process.env.AWS_S3_ACCESS_KEY || "AKIASLXTCDRPPYKRNU76",
+        secretAccessKey:
+            process.env.AWS_S3_KEY_SECRET ||
+            "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",
+    });
+
     constructor(
         @InjectModel(User.name)
         private readonly userModel: Model<User>,
@@ -331,9 +342,8 @@ export class UsersService {
     public async getWallPostIds(
         getWallPostDto: GetWallPostDto
     ): Promise<string[]> {
-        const buildGetWallQuery: Object = getWallPostQueryBuilder(
-            getWallPostDto
-        );
+        const buildGetWallQuery: Object =
+            getWallPostQueryBuilder(getWallPostDto);
 
         const userWall = await this.userModel.findOne(
             { _id: getWallPostDto.userId },
@@ -351,9 +361,8 @@ export class UsersService {
         getNewsFeedPostDto: GetNewsFeedPostDto,
         userId: string
     ): Promise<string[]> {
-        const getNewsFeedPostQuery: Object = getNewsFeedPostQueryBuilder(
-            getNewsFeedPostDto
-        );
+        const getNewsFeedPostQuery: Object =
+            getNewsFeedPostQueryBuilder(getNewsFeedPostDto);
 
         const newsFeed = await this.userModel.findOne(
             { _id: userId },
@@ -365,5 +374,55 @@ export class UsersService {
         }
 
         return [];
+    }
+
+    public async saveAvatar(file: Express.Multer.File, userId: string) {
+        if (
+            file.mimetype === MimeType.JPEG ||
+            file.mimetype === MimeType.BMP ||
+            file.mimetype === MimeType.PNG ||
+            file.mimetype === MimeType.TIFF
+        ) {
+            file.filename = `${uuid()}.${file.mimetype.split("/")[1]}`;
+            const url = await this.uploadFile(file);
+            const userData = await this.usersQueryService.updateOne(userId, {
+                avatar: url,
+            });
+
+            return userData;
+        }
+    }
+
+    uploadFile(file) {
+        const { filename } = file;
+
+        return this.s3_upload(
+            file.buffer,
+            this.AWS_S3_BUCKET,
+            filename,
+            file.mimetype
+        );
+    }
+
+    async s3_upload(file, bucket, name, mimetype) {
+        const params = {
+            Bucket: bucket,
+            Key: String(name),
+            Body: file,
+            ACL: "public-read",
+            ContentType: mimetype,
+            ContentDisposition: "inline",
+            CreateBucketConfiguration: {
+                LocationConstraint: "us-east-2",
+            },
+        };
+
+        try {
+            let s3Response = await this.s3.upload(params).promise();
+
+            return s3Response.Location;
+        } catch (e) {
+            console.log(e);
+        }
     }
 }

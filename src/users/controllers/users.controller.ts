@@ -12,18 +12,24 @@ import {
     UseGuards,
     HttpException,
     UseInterceptors,
+    UploadedFile,
+    Req,
 } from "@nestjs/common";
 import { SEARCH_TAGS, COMMON_MESSAGE } from "enums/message/message.enum";
 import * as _ from "lodash";
 import { MailService } from "mail/mail.service";
 import FirstTimeTagsDto from "dtos/user/firstTimeTags.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import MulterGoogleStorage from "multer-google-storage";
+import { JwtHandlerService } from "services/jwtHandler.service";
 
 @Controller("users")
 export default class UserController {
     constructor(
         private usersService: UsersService,
         private mailService: MailService,
-        private errorHandlerService: ErrorHandlerService
+        private errorHandlerService: ErrorHandlerService,
+        private jwtHandlerService: JwtHandlerService
     ) {}
 
     @Post("create")
@@ -79,6 +85,37 @@ export default class UserController {
     }
 
     @Post("avatar")
-    @UseInterceptors()
-    async uploadAvatar() {}
+    @UseInterceptors(FileInterceptor("file"))
+    async uploadAvatar(
+        @UploadedFile() file: Express.Multer.File,
+        @Req() req,
+        @Res() res
+    ) {
+        try {
+            const userId = this.jwtHandlerService.getUserIdFromJwt(
+                req.headers.authorization
+            );
+
+            if (!userId) {
+                return res
+                    .status(HttpStatus.NOT_FOUND)
+                    .json({ message: COMMON_MESSAGE.FAILED });
+            }
+
+            const data = await this.usersService.saveAvatar(file, userId);
+
+            if (data) {
+                return res
+                    .status(HttpStatus.OK)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: data });
+            }
+        } catch (err) {
+            const errorHandled: HttpException =
+                this.errorHandlerService.handleError(err);
+
+            res.status(errorHandled.getStatus()).json(
+                errorHandled.getResponse()
+            );
+        }
+    }
 }
