@@ -380,8 +380,8 @@ export class UsersService {
         return [];
     }
 
-    public getTopRecruiters(): Promise<User[]> {
-        return this.userModel.aggregate([
+    public async getTopRecruiters(): Promise<User[]> {
+        const data = await this.userModel.aggregate([
             {
                 $project: {
                     firstName: 1,
