@@ -87,9 +87,12 @@ export class PostsService {
         if (createdPost) {
             this.userRelationshipService.addFollowersNewsFeed(
                 userId,
-                createdPost._id
+                createdPost._id.toString()
             );
-            this.userRelationshipService.addUserWall(userId, createdPost._id);
+            this.userRelationshipService.addUserWall(
+                userId,
+                createdPost._id.toString()
+            );
 
             return createdPost;
         }

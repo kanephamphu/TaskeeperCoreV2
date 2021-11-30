@@ -66,11 +66,13 @@ export class UserRelationshipService {
         }
     }
 
-    async addUserWall(userId: string, postId): Promise<void | Error> {
-        this.userModel.updateOne(
+    async addUserWall(userId: string, postId: string): Promise<User> {
+        const data = await this.userModel.findOneAndUpdate(
             { _id: userId },
-            { $push: { wall: { _id: postId } } }
+            { $push: { wallFeed: { $each: [{ _id: postId }], $position: 0 } } }
         );
+
+        return data;
     }
 
     async addFollowersNewsFeed(userId: string, postId): Promise<void | Error> {
@@ -80,9 +82,9 @@ export class UserRelationshipService {
             (followerData) => followerData._id
         );
 
-        this.userModel.updateMany(
+        await this.userModel.updateMany(
             { _id: { $in: followerIds } },
-            { $push: { newsFeed: { _id: postId } } }
+            { $push: { newsFeed: { $each: [{ _id: postId }], $position: 0 } } }
         );
     }
 

@@ -118,6 +118,30 @@ export default class UserController {
         }
     }
 
+    @Post("follow")
+    public async followUser(
+        @Res() res,
+        @Body() firstTimeTagsDto: FirstTimeTagsDto
+    ) {
+        try {
+            const success = await this.usersService.handleFirstTimeTags(
+                firstTimeTagsDto
+            );
+
+            if (success) {
+                res.status(HttpStatus.CREATED).json({
+                    success,
+                });
+            }
+        } catch (error) {
+            const errorHandled: HttpException =
+                this.errorHandlerService.handleError(error);
+            res.status(errorHandled.getStatus()).json(
+                errorHandled.getResponse()
+            );
+        }
+    }
+
     @Post("avatar")
     @UseInterceptors(FileInterceptor("file"))
     async uploadAvatar(

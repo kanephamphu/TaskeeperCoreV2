@@ -5,6 +5,7 @@ import {
     IsEnum,
     IsNotEmpty,
     IsNumber,
+    IsOptional,
     IsString,
     Min,
 } from "class-validator";
@@ -48,6 +49,7 @@ export class NewPostDto {
 
     @IsDate()
     @ApiProperty()
+    @IsOptional()
     expiredDate: Date;
 
     @IsEnum(SalaryType)
