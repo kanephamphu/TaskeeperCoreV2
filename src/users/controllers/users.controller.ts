@@ -157,25 +157,10 @@ export default class UserController {
         }
     }
 
-    @Post("avatar")
-    @UseInterceptors(FileInterceptor("file"))
-    async uploadAvatar(
-        @UploadedFile() file: Express.Multer.File,
-        @Req() req,
-        @Res() res
-    ) {
+    @Get("getTopRecruiters")
+    async getTopRecruiters(@Req() req, @Res() res) {
         try {
-            const userId = this.jwtHandlerService.getUserIdFromJwt(
-                req.headers.authorization
-            );
-
-            if (!userId) {
-                return res
-                    .status(HttpStatus.NOT_FOUND)
-                    .json({ message: COMMON_MESSAGE.FAILED });
-            }
-
-            const data = await this.usersService.saveAvatar(file, userId);
+            const data = await this.usersService.getTopRecruiters();
 
             if (data) {
                 return res

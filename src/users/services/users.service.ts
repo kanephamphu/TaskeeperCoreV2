@@ -380,6 +380,33 @@ export class UsersService {
         return [];
     }
 
+    public getTopRecruiters(): Promise<User[]> {
+        return this.userModel.aggregate([
+            {
+                $project: {
+                    firstName: 1,
+                    lastName: 1,
+                    avatar: 1,
+                    numberOfJobs: {
+                        $cond: {
+                            if: { $isArray: "$wallFeed" },
+                            then: { $size: "$wallFeed" },
+                            else: 0,
+                        },
+                    },
+                },
+            },
+            {
+                $sort: {
+                    numberOfJobs: -1,
+                },
+            },
+            { $limit: 5 },
+        ]);
+
+        return data;
+    }
+
     public async saveAvatar(file: Express.Multer.File, userId: string) {
         if (
             file.mimetype === MimeType.JPEG ||
