@@ -9,14 +9,14 @@ export class GetWallPostDto {
 
     @IsNumber()
     @Min(0)
-    @Max(10)
+    @Max(100)
     @ApiProperty()
     @IsNotEmpty()
     limit: number;
 
     @IsNumber()
     @Min(0)
-    @Max(10)
+    @Max(100)
     @ApiProperty()
     @IsNotEmpty()
     offset: number;
