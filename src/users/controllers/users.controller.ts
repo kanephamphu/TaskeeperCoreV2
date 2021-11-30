@@ -1,4 +1,5 @@
 import { ErrorHandlerService } from "services/errorHandler.service";
+import FollowUserDto from "dtos/user/followUser.dto";
 import { CreateUserDto } from "dtos/user/createUser.dto";
 import { UsersService } from "users/services/users.service";
 import {
@@ -24,6 +25,7 @@ import FirstTimeTagsDto from "dtos/user/firstTimeTags.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import MulterGoogleStorage from "multer-google-storage";
 import { JwtHandlerService } from "services/jwtHandler.service";
+import { UserRelationshipService } from "users/services/userRelationship.service";
 
 @Controller("users")
 export default class UserController {
@@ -31,7 +33,8 @@ export default class UserController {
         private usersService: UsersService,
         private mailService: MailService,
         private errorHandlerService: ErrorHandlerService,
-        private jwtHandlerService: JwtHandlerService
+        private jwtHandlerService: JwtHandlerService,
+        private userRelationshipService: UserRelationshipService
     ) {}
 
     @Post("create")
@@ -119,17 +122,29 @@ export default class UserController {
     }
 
     @Post("follow")
+    @UsePipes(new ValidationPipe({ transform: true }))
     public async followUser(
         @Res() res,
-        @Body() firstTimeTagsDto: FirstTimeTagsDto
+        @Body() followUserDto: FollowUserDto,
+        @Req() req
     ) {
         try {
-            const success = await this.usersService.handleFirstTimeTags(
-                firstTimeTagsDto
+            const userId = this.jwtHandlerService.getUserIdFromJwt(
+                req.headers.authorization
+            );
+            if (!userId) {
+                return res
+                    .status(HttpStatus.NOT_FOUND)
+                    .json({ message: COMMON_MESSAGE.FAILED });
+            }
+
+            const success = await this.userRelationshipService.addFollower(
+                followUserDto.userId,
+                userId
             );
 
             if (success) {
-                res.status(HttpStatus.CREATED).json({
+                res.status(HttpStatus.OK).json({
                     success,
                 });
             }

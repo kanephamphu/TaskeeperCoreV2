@@ -4,7 +4,6 @@ import * as _ from "lodash";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { User } from "schemas/user/user.schema";
 import { Connection, Model } from "mongoose";
-import { InjectQueryService, QueryService } from "@nestjs-query/core";
 import UserRatingDto from "dtos/user/userRating.dto";
 
 @Injectable()
@@ -12,16 +11,16 @@ export class UserRelationshipService {
     constructor(
         @InjectModel(User.name)
         private readonly userModel: Model<User>,
-        @InjectQueryService(User)
-        private readonly usersQueryService: QueryService<User>,
         @InjectConnection() private readonly connection: Connection
     ) {}
 
     async addFollower(userId: string, followerId: string) {
-        const checkExisting = await this.usersQueryService.query({
+        const query = {
             _id: userId,
             follower: { _id: followerId },
-        } as any);
+        };
+
+        const checkExisting = await this.userModel.findOne(query as Object);
 
         if (checkExisting) {
             throw new Error(COMMON_MESSAGE.BAD_REQUEST);
