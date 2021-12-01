@@ -6,5 +6,8 @@ export const buildJwtPayload = (userModel: User) => {
         accountType: userModel.accountType,
         accountStatus: userModel.accountStatus,
         languageCode: userModel.languageCode,
+        avatar: userModel.avatar,
+        firstName: userModel.firstName,
+        lastName: userModel.lastName,
     };
 };
