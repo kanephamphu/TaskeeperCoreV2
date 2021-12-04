@@ -185,9 +185,7 @@ export class PostsService {
         postId: string
     ): Promise<Error | boolean> {
         const postOwnerQuery = checkPostOwnerQueryBuilder(userId, postId);
-        const postPermissionChecked = await this.postsQueryService.query(
-            postOwnerQuery
-        );
+        const postPermissionChecked = await this.postModel.findOne(postOwnerQuery);
 
         if (postPermissionChecked) {
             return true;

@@ -115,7 +115,7 @@ export class PostsManageService {
             throw new Error(ERROR_MESSAGE.NO_PERMISSION);
         }
 
-        const isAlreadyApplied = await this.postsQueryService.query(
+        const isAlreadyApplied = await this.postModel.findOne(
             checkAlreadyApplyQueryBuilder(applierId, applyJobDto.postId)
         );
 
@@ -123,8 +123,8 @@ export class PostsManageService {
             throw new Error(POST_ERROR_MESSAGE.ALREADY_APPLY);
         }
 
-        const appliedJob = await this.postsQueryService.updateOne(
-            applyJobDto.postId,
+        const appliedJob = await this.postModel.updateOne(
+            { _id: applyJobDto.postId },
             applyJobQueryBuilder(applyJobDto, applierId)
         );
 
