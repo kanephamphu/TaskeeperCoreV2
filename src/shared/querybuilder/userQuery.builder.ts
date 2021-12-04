@@ -66,12 +66,6 @@ export const searchUsersQueryBuilder = (
 ): Query<User> => {
     const searchUsersQuery: Query<User> = {};
 
-    _.assign(searchUsersDto.filter, {
-        disabled: {
-            is: false,
-        },
-    });
-
     searchUsersDto.sorting &&
         _.set(searchUsersQuery, "sorting", searchUsersDto.sorting);
     searchUsersDto.filter &&
