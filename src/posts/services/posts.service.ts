@@ -201,7 +201,7 @@ export class PostsService {
     ): Promise<Error | Post[]> {
         const postIds = await this.usersService.getWallPostIds(getWallPostDto);
 
-        return this.postModel.find({ _id: { $in: postIds } });
+        return this.postModel.find({ _id: { $in: postIds }, disabled: false });
     }
 
     async getNewsFeedPosts(
@@ -213,7 +213,7 @@ export class PostsService {
             userId
         );
 
-        return this.postModel.find({ _id: { $in: postIds } });
+        return this.postModel.find({ _id: { $in: postIds }, disabled: false });
     }
 
     public async saveImage(file: Express.Multer.File, userId: string, postId) {
