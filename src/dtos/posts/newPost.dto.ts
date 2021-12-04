@@ -47,7 +47,6 @@ export class NewPostDto {
     @ApiProperty()
     skills: string[];
 
-    @IsDate()
     @ApiProperty()
     @IsOptional()
     expiredDate: Date;
