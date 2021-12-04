@@ -26,6 +26,7 @@ import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UploadImageDto } from "dtos/posts/uploadImage.dto";
+import { SearchJobsDto } from "dtos/posts/searchJobs.dto";
 
 @Controller("posts")
 export class PostsController {
@@ -202,6 +203,29 @@ export class PostsController {
                 return res
                     .status(HttpStatus.FOUND)
                     .json({ message: COMMON_MESSAGE.SUCCESS, data: newsFeed });
+            }
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error: error.message,
+            });
+        }
+    }
+
+    @Post("searchJobs")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async searchJobs(
+        @Res() res,
+        @Body() searchJobsDto: SearchJobsDto,
+        @Req() req
+    ) {
+        try {
+            const posts = await this.postsService.searchJobs(searchJobsDto);
+
+            if (posts) {
+                return res
+                    .status(HttpStatus.FOUND)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: posts });
             }
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({

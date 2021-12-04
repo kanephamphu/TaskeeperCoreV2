@@ -12,6 +12,7 @@ import * as _ from "lodash";
 import {
     checkPostOwnerQueryBuilder,
     getWallPostQueryBuilder,
+    searchPostsQueryBuilder,
 } from "shared/querybuilder/postQuery.builder";
 import { PermissionsService } from "permissions/services/permissions.service";
 import { Action, Subject } from "enums/auth/auth.enum";
@@ -22,6 +23,7 @@ import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 import { FILE_LOCATION, MimeType } from "enums/common/type.enum";
 import { uuid } from "@supercharge/strings/dist";
 import * as AWS from "aws-sdk";
+import { SearchJobsDto } from "dtos/posts/searchJobs.dto";
 
 @Injectable()
 export class PostsService {
@@ -261,6 +263,12 @@ export class PostsService {
         }
 
         throw new Error(ERROR_MESSAGE.WRONG_TYPE_FILE);
+    }
+
+    searchJobs(searchJobsDto: SearchJobsDto): Promise<Post[]> {
+        const query = searchPostsQueryBuilder(searchJobsDto);
+
+        return this.postsQueryService.query(query);
     }
 
     uploadFile(file) {

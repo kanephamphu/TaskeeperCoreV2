@@ -1,6 +1,11 @@
 import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
 import { ApplyJobDto } from "dtos/posts/applyJob.dto";
 import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
+import { Post } from "schemas/post/post.schema";
+import { Query } from "@nestjs-query/core";
+import { SearchJobsDto } from "dtos/posts/searchJobs.dto";
+import * as _ from "lodash";
+
 export const checkPostOwnerQueryBuilder = (userId, postId): Object => {
     return {
         owner: {
@@ -54,4 +59,19 @@ export const getNewsFeedPostQueryBuilder = (
             $slice: [getWallPostDto.offset, getWallPostDto.limit],
         },
     };
+};
+
+export const searchPostsQueryBuilder = (
+    searchJobsDto: SearchJobsDto | any
+): Query<Post> => {
+    const searchJobsQuery: Query<Post> = {};
+
+    searchJobsDto.sorting &&
+        _.set(searchJobsQuery, "sorting", searchJobsDto.sorting);
+    searchJobsDto.filter &&
+        _.set(searchJobsQuery, "filter", searchJobsDto.filter);
+    searchJobsDto.paging &&
+        _.set(searchJobsQuery, "paging", searchJobsDto.paging);
+
+    return searchJobsQuery;
 };

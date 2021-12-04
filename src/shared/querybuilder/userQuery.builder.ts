@@ -1,6 +1,10 @@
 import { ForgotPasswordDto } from "dtos/auth/forgotPassword.dto";
 import UserLoginDto from "dtos/user/login.dto";
+import { SearchUsersDto } from "dtos/user/searchUser.dto";
 import { AccountStatus } from "enums/user/user.enum";
+import { User } from "schemas/user/user.schema";
+import { Query } from "@nestjs-query/core";
+import * as _ from "lodash";
 
 export const buildLoginQuery = (userLoginDto: UserLoginDto): any => {
     const facebookTokenLogin = {
@@ -55,4 +59,25 @@ export const firstTimeTagsQueryBuilder = (tagIds: string[]): Object => {
             },
         },
     };
+};
+
+export const searchUsersQueryBuilder = (
+    searchUsersDto: SearchUsersDto
+): Query<User> => {
+    const searchUsersQuery: Query<User> = {};
+
+    _.assign(searchUsersDto.filter, {
+        disabled: {
+            is: false,
+        },
+    });
+
+    searchUsersDto.sorting &&
+        _.set(searchUsersQuery, "sorting", searchUsersDto.sorting);
+    searchUsersDto.filter &&
+        _.set(searchUsersQuery, "filter", searchUsersDto.filter);
+    searchUsersDto.paging &&
+        _.set(searchUsersQuery, "paging", searchUsersDto.paging);
+
+    return searchUsersQuery;
 };

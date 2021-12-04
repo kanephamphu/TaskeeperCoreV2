@@ -81,4 +81,9 @@ export class SearchFilterDto {
     @ApiProperty()
     @MaxLength(100)
     iLike: any;
+
+    @MinLength(0)
+    @ApiProperty()
+    @MaxLength(100)
+    like: any;
 }

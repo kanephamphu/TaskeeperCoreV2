@@ -26,6 +26,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import MulterGoogleStorage from "multer-google-storage";
 import { JwtHandlerService } from "services/jwtHandler.service";
 import { UserRelationshipService } from "users/services/userRelationship.service";
+import { SearchUsersDto } from "dtos/user/searchUser.dto";
 
 @Controller("users")
 export default class UserController {
@@ -161,6 +162,31 @@ export default class UserController {
     async getTopRecruiters(@Req() req, @Res() res) {
         try {
             const data = await this.usersService.getTopRecruiters();
+
+            if (data) {
+                return res
+                    .status(HttpStatus.OK)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: data });
+            }
+        } catch (err) {
+            const errorHandled: HttpException =
+                this.errorHandlerService.handleError(err);
+
+            res.status(errorHandled.getStatus()).json(
+                errorHandled.getResponse()
+            );
+        }
+    }
+
+    @Post("searchUsers")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async searchUsers(
+        @Req() req,
+        @Res() res,
+        @Body() searchUsersDto: SearchUsersDto
+    ) {
+        try {
+            const data = await this.usersService.searchUsers(searchUsersDto);
 
             if (data) {
                 return res

@@ -15,6 +15,7 @@ import {
     buildLoginQuery,
     buildForgotPasswordQuery,
     firstTimeTagsQueryBuilder,
+    searchUsersQueryBuilder,
 } from "shared/querybuilder/userQuery.builder";
 import UserLoginDto from "dtos/user/login.dto";
 import { CreateUserDto } from "dtos/user/createUser.dto";
@@ -41,6 +42,7 @@ import { GetNewsFeedPostDto } from "dtos/posts/getNewsFeed.dto";
 import { FILE_LOCATION, MimeType } from "enums/common/type.enum";
 import { uuid } from "@supercharge/strings/dist";
 import * as AWS from "aws-sdk";
+import { SearchUsersDto } from "dtos/user/searchUser.dto";
 
 @Injectable()
 export class UsersService {
@@ -405,6 +407,12 @@ export class UsersService {
         ]);
 
         return data;
+    }
+
+    searchUsers(searchUsersDto: SearchUsersDto): Promise<User[]> {
+        const query = searchUsersQueryBuilder(searchUsersDto);
+
+        return this.usersQueryService.query(query);
     }
 
     public async saveAvatar(file: Express.Multer.File, userId: string) {
