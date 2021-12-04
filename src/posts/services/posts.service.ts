@@ -103,7 +103,7 @@ export class PostsService {
     async editPost(
         editedPost: EditPostDto,
         userId: string
-    ): Promise<Error | Post> {
+    ): Promise<Error | Post | Boolean> {
         const updatePermissionChecked = this.permissionsService.checkPermission(
             userId,
             Subject.POST,
@@ -126,13 +126,13 @@ export class PostsService {
         if (isHasPermission) {
             const editedPostId = editedPost._id;
             delete editedPost._id;
-            const updatedPost = await this.postsQueryService.updateOne(
-                editedPostId,
+            const updatedPost = await this.postModel.updateOne(
+                { _id: editedPostId },
                 editedPost
             );
 
-            if (updatedPost) {
-                return updatedPost;
+            if (updatedPost.nModified) {
+                return true;
             }
 
             throw new Error(COMMON_MESSAGE.BAD_REQUEST);
@@ -185,7 +185,9 @@ export class PostsService {
         postId: string
     ): Promise<Error | boolean> {
         const postOwnerQuery = checkPostOwnerQueryBuilder(userId, postId);
-        const postPermissionChecked = await this.postModel.findOne(postOwnerQuery);
+        const postPermissionChecked = await this.postModel.findOne(
+            postOwnerQuery
+        );
 
         if (postPermissionChecked) {
             return true;

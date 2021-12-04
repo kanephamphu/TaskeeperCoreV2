@@ -58,7 +58,7 @@ export class Post extends Document {
     @Prop([{ type: String }])
     images: string[];
 
-    @Prop([{ type: Boolean }])
+    @Prop([{ type: Boolean, default: false }])
     disabled: boolean;
 
     @Prop([{}])
