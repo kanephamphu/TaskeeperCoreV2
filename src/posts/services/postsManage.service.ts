@@ -128,7 +128,7 @@ export class PostsManageService {
             applyJobQueryBuilder(applyJobDto, applierId)
         );
 
-        if (appliedJob) {
+        if (!!appliedJob.nModified) {
             return applyJobDto;
         }
 
