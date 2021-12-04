@@ -81,6 +81,7 @@ export class PostsService {
         const newPost = _.assign(newPostDto, {
             userId,
             owner: [{ _id: userId }],
+            disabled: false,
         });
         const createdPost = await this.postsQueryService.createOne(newPost);
 
