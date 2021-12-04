@@ -76,7 +76,6 @@ export class EditPostDto {
     @ApiProperty()
     benefits: string;
 
-    @IsString()
     @IsArray()
     @ApiProperty()
     positions: string[];
