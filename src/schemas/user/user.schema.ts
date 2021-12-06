@@ -47,7 +47,7 @@ export class User extends Document {
         type: String,
         required: true,
         enum: AccountStatus,
-        default: AccountStatus.INACTIVE,
+        default: AccountStatus.ACTIVE,
     })
     accountStatus: string;
 

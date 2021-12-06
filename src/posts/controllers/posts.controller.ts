@@ -1,3 +1,4 @@
+import { UsersService } from "users/services/users.service";
 import { JwtHandlerService } from "services/jwtHandler.service";
 import { PostsService } from "posts/services/posts.service";
 import { NewPostDto } from "dtos/posts/newPost.dto";
@@ -27,13 +28,15 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UploadImageDto } from "dtos/posts/uploadImage.dto";
 import { SearchJobsDto } from "dtos/posts/searchJobs.dto";
+import * as _ from "lodash";
 
 @Controller("posts")
 export class PostsController {
     errorHandlerService: any;
     constructor(
         private postsService: PostsService,
-        private jwtHandlerService: JwtHandlerService
+        private jwtHandlerService: JwtHandlerService,
+        private usersService: UsersService
     ) {}
 
     @Post("addNewPost")
@@ -168,11 +171,16 @@ export class PostsController {
             const wallPosts = await this.postsService.getWallPosts(
                 getWallPostDto
             );
+            const postOwnerIds = _.map(wallPosts, (wallPost: Object) =>
+                _.get(_.head(_.get(wallPost, "owner")), "_id")
+            );
+            const owners = await this.usersService.getUsers(postOwnerIds);
 
             if (wallPosts) {
-                return res
-                    .status(HttpStatus.FOUND)
-                    .json({ message: COMMON_MESSAGE.SUCCESS, data: wallPosts });
+                return res.status(HttpStatus.FOUND).json({
+                    message: COMMON_MESSAGE.SUCCESS,
+                    data: { wallPosts, owners },
+                });
             }
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({
@@ -194,15 +202,20 @@ export class PostsController {
             const userId = this.jwtHandlerService.getUserIdFromJwt(
                 req.headers.authorization
             );
-            const newsFeed = await this.postsService.getNewsFeedPosts(
+            const newsFeeds = await this.postsService.getNewsFeedPosts(
                 getNewsFeedDto,
                 userId
             );
+            const postOwnerIds = _.map(newsFeeds, (newsFeed: Object) =>
+                _.get(_.head(_.get(newsFeed, "owner")), "_id")
+            );
+            const owners = await this.usersService.getUsers(postOwnerIds);
 
-            if (newsFeed) {
-                return res
-                    .status(HttpStatus.FOUND)
-                    .json({ message: COMMON_MESSAGE.SUCCESS, data: newsFeed });
+            if (newsFeeds) {
+                return res.status(HttpStatus.FOUND).json({
+                    message: COMMON_MESSAGE.SUCCESS,
+                    data: { newsFeeds, owners },
+                });
             }
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({

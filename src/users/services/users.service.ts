@@ -204,8 +204,12 @@ export class UsersService {
         throw new Error(COMMON_MESSAGE.FAILED);
     }
 
-    public async getUser(userId: string) {
+    public getUser(userId: string) {
         return this.usersQueryService.findById(userId);
+    }
+
+    public getUsers(userIds: string[]) {
+        return this.userModel.find({ _id: { $in: userIds }, disabled: false });
     }
 
     public async checkVerifyNumber(
