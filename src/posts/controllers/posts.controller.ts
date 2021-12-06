@@ -171,8 +171,9 @@ export class PostsController {
             const wallPosts = await this.postsService.getWallPosts(
                 getWallPostDto
             );
-            const postOwnerIds = _.map(wallPosts, (wallPost: Object) =>
-                _.get(_.head(_.get(wallPost, "owner")), "_id")
+            const postOwnerIds = _.map(
+                wallPosts,
+                (wallPost: Object) => _.head(_.get(wallPost, "owner")) as string
             );
             const owners = await this.usersService.getUsers(postOwnerIds);
 
@@ -206,8 +207,9 @@ export class PostsController {
                 getNewsFeedDto,
                 userId
             );
-            const postOwnerIds = _.map(newsFeeds, (newsFeed: Object) =>
-                _.get(_.head(_.get(newsFeed, "owner")), "_id")
+            const postOwnerIds = _.map(
+                newsFeeds,
+                (newsFeed: Object) => _.head(_.get(newsFeed, "owner")) as string
             );
             const owners = await this.usersService.getUsers(postOwnerIds);
 
