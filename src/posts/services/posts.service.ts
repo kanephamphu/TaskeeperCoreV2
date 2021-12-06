@@ -1,4 +1,4 @@
-import { UsersService } from "./../../users/services/users.service";
+import { UsersService } from "users/services/users.service";
 import { User } from "schemas/user/user.schema";
 import { GetWallPostDto } from "dtos/posts/getWallJob.dto";
 import { UserRelationshipService } from "users/services/userRelationship.service";

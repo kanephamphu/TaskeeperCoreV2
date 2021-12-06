@@ -18,14 +18,14 @@ import {
 class SearchPagingDto {
     @IsNumber()
     @Min(0)
-    @Max(10)
+    @Max(1000)
     @ApiProperty()
     @IsNotEmpty()
     limit: number;
 
     @IsNumber()
     @Min(0)
-    @Max(10)
+    @Max(1000)
     @ApiProperty()
     @IsNotEmpty()
     offset: number;
@@ -86,4 +86,9 @@ export class SearchFilterDto {
     @ApiProperty()
     @MaxLength(100)
     like: any;
+
+    @MinLength(0)
+    @ApiProperty()
+    @MaxLength(100)
+    in: any;
 }
