@@ -287,4 +287,25 @@ export class PostsController {
             );
         }
     }
+
+    @Get("getRecommendPost")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async getRecommendPost(@Res() res, @Req() req, @Query() query) {
+        try {
+            const postId = query.postId;
+            const posts = await this.postsService.getRecommendPost(postId);
+
+            if (posts) {
+                return res
+                    .status(HttpStatus.OK)
+                    .json({ message: COMMON_MESSAGE.SUCCESS, data: posts });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(HttpStatus.CREATED).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error: error.message,
+            });
+        }
+    }
 }

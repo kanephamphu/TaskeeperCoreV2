@@ -265,10 +265,22 @@ export class PostsService {
         throw new Error(ERROR_MESSAGE.WRONG_TYPE_FILE);
     }
 
-    searchJobs(searchJobsDto: SearchJobsDto): Promise<Post[]> {
+    public searchJobs(searchJobsDto: SearchJobsDto): Promise<Post[]> {
         const query = searchPostsQueryBuilder(searchJobsDto);
 
         return this.postsQueryService.query(query);
+    }
+
+    async getRecommendPost(userId: string): Promise<Error | Post[]> {
+        const post = await this.postModel.findById(userId);
+
+        const filters = {
+            $text: {
+                $search: post.title,
+            },
+        };
+
+        return this.postModel.find(filters).sort({ _id: 1 }).limit(10);
     }
 
     uploadFile(file) {

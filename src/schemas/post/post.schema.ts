@@ -1,4 +1,4 @@
-import { SalaryType } from "./../../enums/post/post.enum";
+import { SalaryType } from "enums/post/post.enum";
 import { User } from "schemas/user/user.schema";
 import { JobType } from "enums/post/post.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
@@ -89,4 +89,11 @@ export class Post extends Document {
     maxSalary: number;
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
+const PostSchema = SchemaFactory.createForClass(Post);
+
+PostSchema.index({
+    title: "text",
+    description: "text",
+});
+
+export { PostSchema };
