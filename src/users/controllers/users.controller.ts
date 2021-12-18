@@ -224,8 +224,7 @@ export default class UserController {
             const user = await this.usersService.edit(editUserDto, userId);
 
             if (user) {
-                const { verifyInformation, loginInformation, ...data } =
-                    user.toObject();
+                const { verifyInformation, loginInformation, ...data } = user;
                 return res
                     .status(HttpStatus.OK)
                     .json({ message: SEARCH_TAGS.SUCCESS, data });
