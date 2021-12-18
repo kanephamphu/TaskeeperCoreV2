@@ -90,11 +90,11 @@ export class UsersService {
         return createdUser.save();
     }
 
-    public async edit(editUserDto: EditUserDto): Promise<any | Error> {
+    public async edit(editUserDto: EditUserDto, adminId: string): Promise<any | Error> {
         const userId = editUserDto._id;
         const updatePermissionChecked =
             await this.permissionsService.checkPermission(
-                userId,
+                adminId,
                 Subject.USER,
                 Action.UPDATE,
                 AccountType.NORMAL_USER

@@ -207,9 +207,21 @@ export default class UserController {
 
     @Post("edit")
     @UsePipes(new ValidationPipe({ transform: true }))
-    public async edit(@Res() res, @Body() editUserDto: EditUserDto) {
+    public async edit(
+        @Res() res,
+        @Req() req,
+        @Body() editUserDto: EditUserDto
+    ) {
         try {
-            const user = await this.usersService.edit(editUserDto);
+            const userId = this.jwtHandlerService.getUserIdFromJwt(
+                req.headers.authorization
+            );
+            if (!userId) {
+                return res
+                    .status(HttpStatus.NOT_FOUND)
+                    .json({ message: COMMON_MESSAGE.FAILED });
+            }
+            const user = await this.usersService.edit(editUserDto, userId);
 
             if (user) {
                 const { verifyInformation, loginInformation, ...data } =
