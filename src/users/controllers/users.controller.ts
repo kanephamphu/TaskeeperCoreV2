@@ -223,7 +223,7 @@ export default class UserController {
             //Todo: Error Handler
             return res.status(HttpStatus.BAD_REQUEST).json({
                 message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
-                error,
+                error: error.message,
             });
         } finally {
             return res
