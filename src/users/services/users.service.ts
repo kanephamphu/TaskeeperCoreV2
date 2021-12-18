@@ -1,3 +1,4 @@
+import { EditUserDto } from "./../../dtos/user/editUser.dto";
 import FirstTimeTagsDto from "dtos/user/firstTimeTags.dto";
 import { ChangePasswordByTokenDto } from "dtos/auth/changePasswordByToken.dto";
 import { MailService } from "mail/mail.service";
@@ -43,6 +44,9 @@ import { FILE_LOCATION, MimeType } from "enums/common/type.enum";
 import { uuid } from "@supercharge/strings/dist";
 import * as AWS from "aws-sdk";
 import { SearchUsersDto } from "dtos/user/searchUser.dto";
+import { Action, Subject } from "enums/auth/auth.enum";
+import { AccountType } from "enums/user/user.enum";
+import { PermissionsService } from "permissions/services/permissions.service";
 
 @Injectable()
 export class UsersService {
@@ -60,7 +64,8 @@ export class UsersService {
         @InjectQueryService(User)
         private readonly usersQueryService: QueryService<User>,
         private jwtService: JwtService,
-        private mailService: MailService
+        private mailService: MailService,
+        private permissionsService: PermissionsService
     ) {}
 
     public async create(createUserDto: CreateUserDto): Promise<User> {
@@ -83,6 +88,29 @@ export class UsersService {
         );
 
         return createdUser.save();
+    }
+
+    public async edit(editUserDto: EditUserDto): Promise<any | Error> {
+        const userId = editUserDto._id;
+        const updatePermissionChecked =
+            await this.permissionsService.checkPermission(
+                userId,
+                Subject.USER,
+                Action.UPDATE,
+                AccountType.NORMAL_USER
+            );
+
+        if (updatePermissionChecked) {
+            delete editUserDto._id;
+            const user = await this.userModel.updateOne(
+                { _id: userId },
+                editUserDto
+            );
+
+            return user;
+        }
+
+        throw new Error("");
     }
 
     public async login(userLoginDto: UserLoginDto): Promise<any> {

@@ -1,3 +1,4 @@
+import { PermissionsModule } from "permissions/permissions.module";
 import { UserRelationshipService } from "users/services/userRelationship.service";
 import { ServicesModule } from "services/services.module";
 import { UserSchema, User } from "schemas/user/user.schema";
@@ -23,6 +24,7 @@ import { NestjsQueryMongooseModule } from "@nestjs-query/query-mongoose";
         }),
         MailModule,
         ServicesModule,
+        PermissionsModule,
     ],
     controllers: [UserController],
     providers: [UsersService, JwtAuthGuard, UserRelationshipService],

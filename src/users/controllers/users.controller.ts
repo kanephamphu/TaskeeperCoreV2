@@ -17,6 +17,7 @@ import {
     Req,
     Get,
     Query,
+    Put,
 } from "@nestjs/common";
 import { SEARCH_TAGS, COMMON_MESSAGE } from "enums/message/message.enum";
 import * as _ from "lodash";
@@ -27,6 +28,7 @@ import MulterGoogleStorage from "multer-google-storage";
 import { JwtHandlerService } from "services/jwtHandler.service";
 import { UserRelationshipService } from "users/services/userRelationship.service";
 import { SearchUsersDto } from "dtos/user/searchUser.dto";
+import { EditUserDto } from "dtos/user/editUser.dto";
 
 @Controller("users")
 export default class UserController {
@@ -200,6 +202,33 @@ export default class UserController {
             res.status(errorHandled.getStatus()).json(
                 errorHandled.getResponse()
             );
+        }
+    }
+
+    @Post("edit")
+    @UsePipes(new ValidationPipe({ transform: true }))
+    public async edit(@Res() res, @Body() editUserDto: EditUserDto) {
+        try {
+            const user = await this.usersService.edit(editUserDto);
+
+            if (user) {
+                const { verifyInformation, loginInformation, ...data } =
+                    user.toObject();
+                return res
+                    .status(HttpStatus.OK)
+                    .json({ message: SEARCH_TAGS.SUCCESS, data });
+            }
+        } catch (error) {
+            console.error(error);
+            //Todo: Error Handler
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: COMMON_MESSAGE.INTERNAL_SERVER_ERROR,
+                error,
+            });
+        } finally {
+            return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ message: SEARCH_TAGS.NOT_FOUND });
         }
     }
 }
