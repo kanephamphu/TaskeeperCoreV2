@@ -14,7 +14,7 @@ import { join } from "path";
                 secure: false,
                 auth: {
                     user: "nowayit69@gmail.com",
-                    pass: "Anhphutai0159",
+                    pass: "",
                 },
             },
             defaults: {
